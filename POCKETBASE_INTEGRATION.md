@@ -42,8 +42,10 @@ examples/
 Ensure your `.env` file has:
 
 ```env
-POCKETBASE_URL=https://admin.kontext.site
+NITRO_POCKETBASE_URL=https://admin.kontext.site
 ```
+
+This will override the `pocketbaseUrl` runtime config defined in `nuxt.config.ts`.
 
 ## 📖 Two Approaches
 
@@ -93,7 +95,8 @@ Create Nitro server endpoints that use the PocketBase SDK server-side.
 import PocketBase from 'pocketbase'
 
 export default defineEventHandler(async (event) => {
-  const pb = new PocketBase(process.env.POCKETBASE_URL)
+  const config = useRuntimeConfig(event)
+  const pb = new PocketBase(config.pocketbaseUrl)
 
   const records = await pb.collection('Portfolio_Projects').getFullList({
     sort: 'Order'
@@ -426,8 +429,8 @@ Visit `/test-pocketbase` in your browser to see all functionality in action:
 ## 🔧 Troubleshooting
 
 ### Images not loading?
-- Check that `POCKETBASE_URL` is set correctly in `.env`
-- Verify the file proxy is working at `/api/pb-files/[...path]`
+- Check that `NITRO_POCKETBASE_URL` is set correctly in `.env`
+- Verify the PocketBase backend is accessible
 - Ensure the file exists in PocketBase
 
 ### Data not fetching?

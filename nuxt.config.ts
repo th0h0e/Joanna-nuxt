@@ -18,6 +18,11 @@ export default defineNuxtConfig({
     '/api/**': { cors: true }
   },
 
+  runtimeConfig: {
+    // Server-side only (not exposed to client)
+    pocketbaseUrl: 'https://admin.kontext.site' // default value, overridden by NITRO_POCKETBASE_URL
+  },
+
   compatibilityDate: '2025-01-15',
 
   eslint: {
