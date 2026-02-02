@@ -1,15 +1,15 @@
 # PocketBase Integration Guide
 
-This project uses PocketBase as the backend CMS. All requests are proxied through Nuxt server API routes for security and flexibility.
+This project uses PocketBase as the backend CMS with the **official PocketBase JavaScript SDK**. All requests are proxied through Nuxt server API routes for security.
 
 ## 🏗️ Architecture
 
 ```
 Client (Browser)
     ↓
-Nuxt Composables (usePocketBase*)
+PocketBase SDK (usePocketBase)
     ↓
-Nuxt Server API (/api/pocketbase/*)
+Nuxt Server API Proxy (/api/pocketbase/*)
     ↓
 PocketBase Backend (https://admin.kontext.site)
 ```
@@ -17,20 +17,22 @@ PocketBase Backend (https://admin.kontext.site)
 ## 📁 File Structure
 
 ```
-composables/
-├── usePocketBase.ts          # Main composable with fetch helpers
-├── usePocketBaseAuth.ts      # Authentication composable
+app/composables/
+├── usePocketBase.ts          # PocketBase SDK client
+├── usePocketBaseAuth.ts      # Authentication management
 └── usePocketBaseRealtime.ts  # Real-time subscriptions
 
 server/api/
 ├── pocketbase/[...path].ts   # Proxy for PocketBase API calls
-└── pb-files/[...path].ts     # Proxy for serving images/files
+├── pb-files/[...path].ts     # Proxy for serving images/files
+└── portfolio.ts              # Example: Server-side PocketBase SDK usage
 
 shared/types/
 └── pocketbase-types.ts       # Auto-generated TypeScript types
 
-pages/
-└── test-pocketbase.vue       # Test page with examples
+examples/
+├── portfolio-api-examples.ts        # Server API usage examples
+└── server-side-fetch-examples.ts    # Client-side SDK usage examples
 ```
 
 ## 🚀 Quick Start
@@ -43,62 +45,109 @@ Ensure your `.env` file has:
 POCKETBASE_URL=https://admin.kontext.site
 ```
 
-### 2. Basic Usage Examples
+## 📖 Two Approaches
 
-#### Fetch a Single Record
+### **Approach 1: Client-Side SDK (Recommended by PocketBase)**
 
-```vue
-<script setup lang="ts">
-// Get the active homepage
-const { data: homepage, status } = await usePocketBaseFirstListItem(
-  'Homepage',
-  'Is_Active = true'
-)
-</script>
-
-<template>
-  <div v-if="status === 'pending'">Loading...</div>
-  <div v-else-if="homepage">
-    <h1>{{ homepage.Hero_Title }}</h1>
-  </div>
-</template>
-```
-
-#### Fetch All Records (No Pagination)
+Use the PocketBase SDK directly in your components. This is the **official PocketBase approach**.
 
 ```vue
 <script setup lang="ts">
-// Get all portfolio projects, sorted by Order
-const { data: projects } = await usePocketBaseFullList(
-  'Portfolio_Projects',
-  {
-    sort: 'Order',
-    filter: 'someField != ""',
+// Get the PocketBase client
+const pb = usePocketBase()
+
+// Fetch all records
+const projects = ref([])
+const loading = ref(false)
+
+const fetchProjects = async () => {
+  loading.value = true
+  try {
+    // Use PocketBase SDK methods directly
+    projects.value = await pb.collection('Portfolio_Projects').getFullList({
+      sort: 'Order'
+    })
+  } finally {
+    loading.value = false
   }
-)
+}
 </script>
 
 <template>
+  <button @click="fetchProjects" :disabled="loading">
+    {{ loading ? 'Loading...' : 'Load Projects' }}
+  </button>
+
   <div v-for="project in projects" :key="project.id">
     {{ project.Title }}
   </div>
 </template>
 ```
 
-#### Fetch Paginated Records
+### **Approach 2: Server API Endpoint**
 
+Create Nitro server endpoints that use the PocketBase SDK server-side.
+
+```ts
+// server/api/portfolio.ts
+import PocketBase from 'pocketbase'
+
+export default defineEventHandler(async (event) => {
+  const pb = new PocketBase(process.env.POCKETBASE_URL)
+
+  const records = await pb.collection('Portfolio_Projects').getFullList({
+    sort: 'Order'
+  })
+
+  return records
+})
+```
+
+Then call from client:
 ```vue
-<script setup lang="ts">
-const page = ref(1)
+<script setup>
+const projects = await $fetch('/api/portfolio')
+</script>
+```
 
-const { data: result, refresh } = await usePocketBaseList(
-  'Portfolio_Projects',
-  {
-    page: page.value,
-    perPage: 10,
-    sort: '-created',
-  }
-)
+## 🎯 PocketBase SDK Methods
+
+### Get All Records (No Pagination)
+
+```ts
+const pb = usePocketBase()
+
+const records = await pb.collection('Portfolio_Projects').getFullList({
+  sort: 'Order',
+  filter: 'Title != ""'
+})
+```
+
+### Get Paginated List
+
+```ts
+const result = await pb.collection('Portfolio_Projects').getList(1, 50, {
+  sort: '-created',
+  filter: 'Order > 0'
+})
+
+// result contains: { page, perPage, totalItems, totalPages, items: [...] }
+```
+
+### Get Single Record by ID
+
+```ts
+const record = await pb.collection('Portfolio_Projects').getOne('RECORD_ID', {
+  expand: 'author'
+})
+```
+
+### Get First Matching Record
+
+```ts
+const record = await pb.collection('Portfolio_Projects').getFirstListItem('Order = 1', {
+  expand: 'author'
+})
 </script>
 
 <template>

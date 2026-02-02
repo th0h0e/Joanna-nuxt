@@ -1,12 +1,18 @@
 /**
  * PocketBase Client Composable
  * Provides a typed PocketBase client that proxies through Nuxt API
+ *
+ * Use the PocketBase SDK directly:
+ * @example
+ * const pb = usePocketBase()
+ * const records = await pb.collection('Portfolio_Projects').getFullList({ sort: 'Order' })
+ * const record = await pb.collection('Portfolio_Projects').getOne('RECORD_ID')
+ * const result = await pb.collection('Portfolio_Projects').getList(1, 50, { filter: 'Order > 0' })
  */
 
 import PocketBase from 'pocketbase'
 import type {
   TypedPocketBase,
-  Collections,
   CollectionResponses
 } from '~/shared/types/pocketbase-types'
 
@@ -14,7 +20,43 @@ let pb: TypedPocketBase | null = null
 
 /**
  * Get the typed PocketBase instance
- * Uses the Nuxt API proxy endpoint
+ * Uses the Nuxt API proxy endpoint (/api/pocketbase)
+ *
+ * @example
+ * const pb = usePocketBase()
+ *
+ * // Get all records
+ * const records = await pb.collection('Portfolio_Projects').getFullList({
+ *   sort: 'Order'
+ * })
+ *
+ * // Get paginated list
+ * const result = await pb.collection('Portfolio_Projects').getList(1, 50, {
+ *   filter: 'Title != ""',
+ *   sort: '-created'
+ * })
+ *
+ * // Get single record
+ * const record = await pb.collection('Portfolio_Projects').getOne('RECORD_ID', {
+ *   expand: 'author'
+ * })
+ *
+ * // Get first matching record
+ * const first = await pb.collection('Portfolio_Projects').getFirstListItem('Order = 1')
+ *
+ * // Create record
+ * const created = await pb.collection('Portfolio_Projects').create({
+ *   Title: 'New Project',
+ *   Description: 'Description here'
+ * })
+ *
+ * // Update record
+ * const updated = await pb.collection('Portfolio_Projects').update('RECORD_ID', {
+ *   Title: 'Updated Title'
+ * })
+ *
+ * // Delete record
+ * await pb.collection('Portfolio_Projects').delete('RECORD_ID')
  */
 export function usePocketBase(): TypedPocketBase {
   if (!pb) {
@@ -29,147 +71,14 @@ export function usePocketBase(): TypedPocketBase {
 }
 
 /**
- * Fetch a single record by ID
- * @example
- * const { data, error, status } = await usePocketBaseRecord('Homepage', 'abc123')
- */
-export async function usePocketBaseRecord<T extends keyof CollectionResponses>(
-  collection: T,
-  id: string,
-  options?: {
-    expand?: string
-    fields?: string
-  }
-) {
-  const { data, error, status, refresh } = await useLazyFetch<CollectionResponses[T]>(
-    () => `/api/pocketbase/collections/${collection}/records/${id}`,
-    {
-      query: options,
-      server: false // Client-side only
-    }
-  )
-
-  return { data, error, status, refresh }
-}
-
-/**
- * Fetch a list of records with pagination
- * @example
- * const { data } = await usePocketBaseList('Portfolio_Projects', {
- *   page: 1,
- *   perPage: 10,
- *   sort: '-created',
- * })
- */
-export async function usePocketBaseList<T extends keyof CollectionResponses>(
-  collection: T,
-  options?: {
-    page?: number
-    perPage?: number
-    sort?: string
-    filter?: string
-    expand?: string
-    fields?: string
-  }
-) {
-  const { data, error, status, refresh } = await useLazyFetch<{
-    page: number
-    perPage: number
-    totalItems: number
-    totalPages: number
-    items: CollectionResponses[T][]
-  }>(
-    () => `/api/pocketbase/collections/${collection}/records`,
-    {
-      query: {
-        page: options?.page || 1,
-        perPage: options?.perPage || 30,
-        ...(options?.sort && { sort: options.sort }),
-        ...(options?.filter && { filter: options.filter }),
-        ...(options?.expand && { expand: options.expand }),
-        ...(options?.fields && { fields: options.fields })
-      },
-      server: false // Client-side only
-    }
-  )
-
-  return { data, error, status, refresh }
-}
-
-/**
- * Fetch all records (no pagination)
- * @example
- * const { data } = await usePocketBaseFullList('Portfolio_Projects', {
- *   sort: '-Order',
- * })
- */
-export async function usePocketBaseFullList<T extends keyof CollectionResponses>(
-  collection: T,
-  options?: {
-    sort?: string
-    filter?: string
-    expand?: string
-    fields?: string
-  }
-) {
-  const { data, error, status, refresh } = await useLazyFetch<CollectionResponses[T][]>(
-    () => `/api/pocketbase/collections/${collection}/records`,
-    {
-      query: {
-        perPage: 500, // PocketBase max for getFullList
-        ...(options?.sort && { sort: options.sort }),
-        ...(options?.filter && { filter: options.filter }),
-        ...(options?.expand && { expand: options.expand }),
-        ...(options?.fields && { fields: options.fields })
-      },
-      server: false, // Client-side only
-      transform: (response: any) => {
-        // Transform paginated response to just items array
-        return response.items || response
-      }
-    }
-  )
-
-  return { data, error, status, refresh }
-}
-
-/**
- * Fetch the first record matching a filter
- * @example
- * const { data } = await usePocketBaseFirstListItem('Homepage', 'Is_Active = true')
- */
-export async function usePocketBaseFirstListItem<T extends keyof CollectionResponses>(
-  collection: T,
-  filter: string,
-  options?: {
-    expand?: string
-    fields?: string
-  }
-) {
-  const { data, error, status, refresh } = await useLazyFetch<CollectionResponses[T]>(
-    () => `/api/pocketbase/collections/${collection}/records`,
-    {
-      query: {
-        filter,
-        perPage: 1,
-        ...(options?.expand && { expand: options.expand }),
-        ...(options?.fields && { fields: options.fields })
-      },
-      server: false, // Client-side only
-      transform: (response: any) => {
-        // Return first item from the list
-        return response.items?.[0] || null
-      }
-    }
-  )
-
-  return { data, error, status, refresh }
-}
-
-/**
  * Get the URL for a PocketBase file (image, document, etc.)
+ * Proxies through /api/pb-files for security
+ *
  * @example
- * const imageUrl = usePocketBaseFileUrl(homepageRecord, 'Hero_Image', { thumb: '800x600' })
+ * const imageUrl = usePocketBaseFileUrl(project, 'hero.jpg', { thumb: '800x600' })
+ *
+ * // In template:
+ * <img :src="usePocketBaseFileUrl(record, record.Hero_Image, { thumb: '400x300' })" />
  */
 export function usePocketBaseFileUrl<T extends keyof CollectionResponses>(
   record: CollectionResponses[T] | null | undefined,
