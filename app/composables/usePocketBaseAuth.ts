@@ -27,13 +27,12 @@ export function usePocketBaseAuth() {
       return {
         success: true,
         user: authData.record as UsersResponse,
-        token: authData.token,
+        token: authData.token
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       return {
         success: false,
-        error: error.message || 'Login failed',
+        error: error.message || 'Login failed'
       }
     }
   }
@@ -54,19 +53,18 @@ export function usePocketBaseAuth() {
         email,
         password,
         passwordConfirm,
-        ...(name && { name }),
+        ...(name && { name })
       }
 
       const record = await pb.collection('users').create(data)
       return {
         success: true,
-        user: record as UsersResponse,
+        user: record as UsersResponse
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       return {
         success: false,
-        error: error.message || 'Registration failed',
+        error: error.message || 'Registration failed'
       }
     }
   }
@@ -78,11 +76,10 @@ export function usePocketBaseAuth() {
     try {
       await pb.collection('users').requestPasswordReset(email)
       return { success: true }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       return {
         success: false,
-        error: error.message || 'Password reset request failed',
+        error: error.message || 'Password reset request failed'
       }
     }
   }
@@ -100,13 +97,12 @@ export function usePocketBaseAuth() {
       const authData = await pb.collection('users').authRefresh()
       return {
         success: true,
-        user: authData.record as UsersResponse,
+        user: authData.record as UsersResponse
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       return {
         success: false,
-        error: error.message || 'Token refresh failed',
+        error: error.message || 'Token refresh failed'
       }
     }
   }
@@ -120,6 +116,6 @@ export function usePocketBaseAuth() {
     requestPasswordReset,
     refresh,
     isAuthenticated,
-    pb,
+    pb
   }
 }

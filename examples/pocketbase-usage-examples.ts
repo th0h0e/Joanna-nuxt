@@ -9,7 +9,7 @@
 export const exampleHomepage = async () => {
   const { data: homepage, status } = await usePocketBaseFirstListItem(
     'Homepage',
-    'Is_Active = true',
+    'Is_Active = true'
   )
 
   // Type: HomepageResponse | null
@@ -24,9 +24,9 @@ export const examplePortfolioProjects = async () => {
   const { data: projects } = await usePocketBaseFullList(
     'Portfolio_Projects',
     {
-      sort: 'Order', // Sort by Order field ascending
+      sort: 'Order' // Sort by Order field ascending
       // sort: '-Order', // Use minus for descending
-    },
+    }
   )
 
   // Type: PortfolioProjectsResponse[]
@@ -45,8 +45,8 @@ export const examplePaginatedProjects = async () => {
     {
       page: page.value,
       perPage: 10,
-      sort: '-created', // Newest first
-    },
+      sort: '-created' // Newest first
+    }
   )
 
   // result contains: { page, perPage, totalItems, totalPages, items[] }
@@ -94,7 +94,7 @@ export const exampleImageArray = () => {
 export const exampleSettings = async () => {
   const { data: settings } = await usePocketBaseFirstListItem(
     'Settings',
-    'id != ""', // Get first/only record
+    'id != ""' // Get first/only record
   )
 
   // Type: SettingsResponse | null
@@ -108,7 +108,7 @@ export const exampleSettings = async () => {
 export const exampleAbout = async () => {
   const { data: about } = await usePocketBaseFirstListItem(
     'About',
-    'Is_Active = true',
+    'Is_Active = true'
   )
 
   // Type: AboutResponse | null
@@ -138,16 +138,16 @@ export const exampleFilters = async () => {
   const { data: activeProjects } = await usePocketBaseFullList(
     'Portfolio_Projects',
     {
-      filter: 'Title != "" && Order > 0',
-    },
+      filter: 'Title != "" && Order > 0'
+    }
   )
 
   // OR condition
   const { data: featuredProjects } = await usePocketBaseFullList(
     'Portfolio_Projects',
     {
-      filter: 'Order = 1 || Title ~ "Featured"',
-    },
+      filter: 'Order = 1 || Title ~ "Featured"'
+    }
   )
 
   return { activeProjects, featuredProjects }
@@ -166,12 +166,12 @@ export const exampleDirectClient = async () => {
   const newProject = await pb.collection('Portfolio_Projects').create({
     Title: 'New Project',
     Description: 'Project description',
-    Order: 1,
+    Order: 1
   })
 
   // Update a record
   const updated = await pb.collection('Portfolio_Projects').update('record-id', {
-    Title: 'Updated Title',
+    Title: 'Updated Title'
   })
 
   // Delete a record
@@ -200,7 +200,7 @@ export const exampleAuth = () => {
       'new@example.com',
       'password',
       'password',
-      'John Doe',
+      'John Doe'
     )
     if (result.success) {
       console.log('Registered!', result.user)
@@ -224,7 +224,7 @@ export const exampleReactive = () => {
   // Fetch record when selectedId changes
   const { data: project } = await usePocketBaseRecord(
     'Portfolio_Projects',
-    selectedId.value,
+    selectedId.value
   )
 
   watch(selectedId, () => {
@@ -254,7 +254,7 @@ export const exampleRefresh = () => {
 export const exampleErrorHandling = async () => {
   const { data, error, status } = await usePocketBaseRecord(
     'Portfolio_Projects',
-    'some-id',
+    'some-id'
   )
 
   // In template:

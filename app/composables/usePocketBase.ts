@@ -7,7 +7,7 @@ import PocketBase from 'pocketbase'
 import type {
   TypedPocketBase,
   Collections,
-  CollectionResponses,
+  CollectionResponses
 } from '~/shared/types/pocketbase-types'
 
 let pb: TypedPocketBase | null = null
@@ -39,14 +39,14 @@ export async function usePocketBaseRecord<T extends keyof CollectionResponses>(
   options?: {
     expand?: string
     fields?: string
-  },
+  }
 ) {
   const { data, error, status, refresh } = await useLazyFetch<CollectionResponses[T]>(
     () => `/api/pocketbase/collections/${collection}/records/${id}`,
     {
       query: options,
-      server: false, // Client-side only
-    },
+      server: false // Client-side only
+    }
   )
 
   return { data, error, status, refresh }
@@ -70,7 +70,7 @@ export async function usePocketBaseList<T extends keyof CollectionResponses>(
     filter?: string
     expand?: string
     fields?: string
-  },
+  }
 ) {
   const { data, error, status, refresh } = await useLazyFetch<{
     page: number
@@ -87,10 +87,10 @@ export async function usePocketBaseList<T extends keyof CollectionResponses>(
         ...(options?.sort && { sort: options.sort }),
         ...(options?.filter && { filter: options.filter }),
         ...(options?.expand && { expand: options.expand }),
-        ...(options?.fields && { fields: options.fields }),
+        ...(options?.fields && { fields: options.fields })
       },
-      server: false, // Client-side only
-    },
+      server: false // Client-side only
+    }
   )
 
   return { data, error, status, refresh }
@@ -110,7 +110,7 @@ export async function usePocketBaseFullList<T extends keyof CollectionResponses>
     filter?: string
     expand?: string
     fields?: string
-  },
+  }
 ) {
   const { data, error, status, refresh } = await useLazyFetch<CollectionResponses[T][]>(
     () => `/api/pocketbase/collections/${collection}/records`,
@@ -120,14 +120,14 @@ export async function usePocketBaseFullList<T extends keyof CollectionResponses>
         ...(options?.sort && { sort: options.sort }),
         ...(options?.filter && { filter: options.filter }),
         ...(options?.expand && { expand: options.expand }),
-        ...(options?.fields && { fields: options.fields }),
+        ...(options?.fields && { fields: options.fields })
       },
       server: false, // Client-side only
       transform: (response: any) => {
         // Transform paginated response to just items array
         return response.items || response
-      },
-    },
+      }
+    }
   )
 
   return { data, error, status, refresh }
@@ -144,7 +144,7 @@ export async function usePocketBaseFirstListItem<T extends keyof CollectionRespo
   options?: {
     expand?: string
     fields?: string
-  },
+  }
 ) {
   const { data, error, status, refresh } = await useLazyFetch<CollectionResponses[T]>(
     () => `/api/pocketbase/collections/${collection}/records`,
@@ -153,14 +153,14 @@ export async function usePocketBaseFirstListItem<T extends keyof CollectionRespo
         filter,
         perPage: 1,
         ...(options?.expand && { expand: options.expand }),
-        ...(options?.fields && { fields: options.fields }),
+        ...(options?.fields && { fields: options.fields })
       },
       server: false, // Client-side only
       transform: (response: any) => {
         // Return first item from the list
         return response.items?.[0] || null
-      },
-    },
+      }
+    }
   )
 
   return { data, error, status, refresh }
@@ -176,7 +176,7 @@ export function usePocketBaseFileUrl<T extends keyof CollectionResponses>(
   filename: string,
   options?: {
     thumb?: string // e.g., '100x100', '0x100', '100x0'
-  },
+  }
 ): string {
   if (!record || !filename) {
     return ''

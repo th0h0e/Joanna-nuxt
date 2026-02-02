@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   routeRules: {
-    '/': { prerender: true }
+    '/api/**': { cors: true }
   },
 
   compatibilityDate: '2025-01-15',
@@ -24,7 +24,7 @@ export default defineNuxtConfig({
     config: {
       stylistic: {
         commaDangle: 'never',
-        braceStyle: '1tbs'
+        braceStyle: '2tbs'
       }
     }
   }

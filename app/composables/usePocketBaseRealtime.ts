@@ -11,7 +11,7 @@ export function usePocketBaseRealtime<T extends keyof CollectionResponses>(
   options?: {
     recordId?: string
     filter?: string
-  },
+  }
 ) {
   const pb = usePocketBase()
   const data = ref<CollectionResponses[T] | null>(null)
@@ -30,13 +30,12 @@ export function usePocketBaseRealtime<T extends keyof CollectionResponses>(
         (e: RecordSubscription<CollectionResponses[T]>) => {
           data.value = e.record
         },
-        options?.filter ? { filter: options.filter } : undefined,
+        options?.filter ? { filter: options.filter } : undefined
       )
 
       isSubscribed.value = true
       error.value = null
-    }
-    catch (err: any) {
+    } catch (err: any) {
       error.value = err
       console.error('Subscription error:', err)
     }
@@ -49,13 +48,11 @@ export function usePocketBaseRealtime<T extends keyof CollectionResponses>(
     try {
       if (options?.recordId) {
         await pb.collection(collection).unsubscribe(options.recordId)
-      }
-      else {
+      } else {
         await pb.collection(collection).unsubscribe()
       }
       isSubscribed.value = false
-    }
-    catch (err: any) {
+    } catch (err: any) {
       error.value = err
       console.error('Unsubscribe error:', err)
     }
@@ -73,7 +70,7 @@ export function usePocketBaseRealtime<T extends keyof CollectionResponses>(
     isSubscribed,
     error,
     subscribe,
-    unsubscribe,
+    unsubscribe
   }
 }
 
@@ -87,7 +84,7 @@ export function usePocketBaseRealtimeList<T extends keyof CollectionResponses>(
   collection: T,
   options?: {
     filter?: string
-  },
+  }
 ) {
   const pb = usePocketBase()
   const items = ref<Map<string, CollectionResponses[T]>>(new Map())
@@ -104,18 +101,16 @@ export function usePocketBaseRealtimeList<T extends keyof CollectionResponses>(
         (e: RecordSubscription<CollectionResponses[T]>) => {
           if (e.action === 'delete') {
             items.value.delete(e.record.id)
-          }
-          else {
+          } else {
             items.value.set(e.record.id, e.record)
           }
         },
-        options?.filter ? { filter: options.filter } : undefined,
+        options?.filter ? { filter: options.filter } : undefined
       )
 
       isSubscribed.value = true
       error.value = null
-    }
-    catch (err: any) {
+    } catch (err: any) {
       error.value = err
       console.error('Subscription error:', err)
     }
@@ -128,8 +123,7 @@ export function usePocketBaseRealtimeList<T extends keyof CollectionResponses>(
     try {
       await pb.collection(collection).unsubscribe()
       isSubscribed.value = false
-    }
-    catch (err: any) {
+    } catch (err: any) {
       error.value = err
       console.error('Unsubscribe error:', err)
     }
@@ -150,6 +144,6 @@ export function usePocketBaseRealtimeList<T extends keyof CollectionResponses>(
     isSubscribed,
     error,
     subscribe,
-    unsubscribe,
+    unsubscribe
   }
 }

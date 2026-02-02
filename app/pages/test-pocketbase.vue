@@ -4,27 +4,27 @@ import type { HomepageResponse, PortfolioProjectsResponse, AboutResponse, Settin
 // Test 1: Fetch active Homepage
 const { data: homepage, status: homepageStatus, refresh: refreshHomepage } = await usePocketBaseFirstListItem(
   'Homepage',
-  'Is_Active = true',
+  'Is_Active = true'
 )
 
 // Test 2: Fetch all Portfolio Projects (sorted by Order)
 const { data: projects, status: projectsStatus, refresh: refreshProjects } = await usePocketBaseFullList(
   'Portfolio_Projects',
   {
-    sort: 'Order', // Sort by Order field ascending
-  },
+    sort: 'Order' // Sort by Order field ascending
+  }
 )
 
 // Test 3: Fetch About page
 const { data: about, status: aboutStatus } = await usePocketBaseFirstListItem(
   'About',
-  'Is_Active = true',
+  'Is_Active = true'
 )
 
 // Test 4: Fetch Settings
 const { data: settings, status: settingsStatus } = await usePocketBaseFirstListItem(
   'Settings',
-  'id != ""', // Get first/only settings record
+  'id != ""' // Get first/only settings record
 )
 
 // Test 5: Paginated list of Portfolio Projects
@@ -34,8 +34,8 @@ const { data: paginatedProjects, status: paginatedStatus, refresh: refreshPagina
   {
     page: currentPage.value,
     perPage: 5,
-    sort: '-created',
-  },
+    sort: '-created'
+  }
 )
 
 // Helper to get image URLs
@@ -68,11 +68,17 @@ onMounted(() => {
         Status: <span class="font-mono">{{ homepageStatus }}</span>
       </p>
 
-      <div v-if="homepageStatus === 'pending'" class="text-gray-500">
+      <div
+        v-if="homepageStatus === 'pending'"
+        class="text-gray-500"
+      >
         Loading...
       </div>
 
-      <div v-else-if="homepage" class="space-y-4">
+      <div
+        v-else-if="homepage"
+        class="space-y-4"
+      >
         <div>
           <strong>Title:</strong> {{ homepage.Hero_Title }}
         </div>
@@ -84,7 +90,10 @@ onMounted(() => {
         </div>
 
         <!-- Display Hero Image if available -->
-        <div v-if="homepage.Hero_Image" class="space-y-2">
+        <div
+          v-if="homepage.Hero_Image"
+          class="space-y-2"
+        >
           <strong>Hero Image:</strong>
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -111,7 +120,10 @@ onMounted(() => {
         </div>
 
         <!-- Display Mobile Hero Image if available -->
-        <div v-if="homepage.Hero_Image_Mobile" class="space-y-2">
+        <div
+          v-if="homepage.Hero_Image_Mobile"
+          class="space-y-2"
+        >
           <strong>Mobile Hero Image:</strong>
           <img
             :src="getImageUrl(homepage, homepage.Hero_Image_Mobile, '300x0')"
@@ -121,14 +133,17 @@ onMounted(() => {
         </div>
 
         <button
-          @click="refreshHomepage()"
           class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          @click="refreshHomepage()"
         >
           Refresh Homepage
         </button>
       </div>
 
-      <div v-else class="text-red-500">
+      <div
+        v-else
+        class="text-red-500"
+      >
         No active homepage found
       </div>
     </section>
@@ -142,11 +157,17 @@ onMounted(() => {
         Status: <span class="font-mono">{{ projectsStatus }}</span>
       </p>
 
-      <div v-if="projectsStatus === 'pending'" class="text-gray-500">
+      <div
+        v-if="projectsStatus === 'pending'"
+        class="text-gray-500"
+      >
         Loading...
       </div>
 
-      <div v-else-if="projects && projects.length > 0" class="space-y-6">
+      <div
+        v-else-if="projects && projects.length > 0"
+        class="space-y-6"
+      >
         <p class="text-sm text-gray-600">
           Found {{ projects.length }} projects
         </p>
@@ -167,7 +188,10 @@ onMounted(() => {
           </div>
 
           <!-- Display project images -->
-          <div v-if="project.Images && project.Images.length > 0" class="space-y-2">
+          <div
+            v-if="project.Images && project.Images.length > 0"
+            class="space-y-2"
+          >
             <strong class="block">Images ({{ project.Images.length }}):</strong>
             <div class="grid grid-cols-3 gap-2">
               <img
@@ -181,21 +205,27 @@ onMounted(() => {
           </div>
 
           <!-- Display responsibilities if available -->
-          <div v-if="project.Responsibility_json" class="text-sm">
+          <div
+            v-if="project.Responsibility_json"
+            class="text-sm"
+          >
             <strong>Responsibilities:</strong>
             <pre class="bg-gray-100 p-2 rounded mt-1 text-xs overflow-auto">{{ project.Responsibility_json }}</pre>
           </div>
         </div>
 
         <button
-          @click="refreshProjects()"
           class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          @click="refreshProjects()"
         >
           Refresh Projects
         </button>
       </div>
 
-      <div v-else class="text-gray-500">
+      <div
+        v-else
+        class="text-gray-500"
+      >
         No projects found
       </div>
     </section>
@@ -209,11 +239,17 @@ onMounted(() => {
         Status: <span class="font-mono">{{ aboutStatus }}</span>
       </p>
 
-      <div v-if="aboutStatus === 'pending'" class="text-gray-500">
+      <div
+        v-if="aboutStatus === 'pending'"
+        class="text-gray-500"
+      >
         Loading...
       </div>
 
-      <div v-else-if="about" class="space-y-4">
+      <div
+        v-else-if="about"
+        class="space-y-4"
+      >
         <div>
           <strong>Portfolio Title:</strong> {{ about.Portfolio_Title }}
         </div>
@@ -228,7 +264,10 @@ onMounted(() => {
         </div>
         <div v-if="about.Contact_Message">
           <strong>Contact Message:</strong>
-          <div v-html="about.Contact_Message" class="prose mt-2" />
+          <div
+            class="prose mt-2"
+            v-html="about.Contact_Message"
+          />
         </div>
         <div v-if="about.Client_List_Json">
           <strong>Client List:</strong>
@@ -236,7 +275,10 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-else class="text-gray-500">
+      <div
+        v-else
+        class="text-gray-500"
+      >
         No about page found
       </div>
     </section>
@@ -250,17 +292,26 @@ onMounted(() => {
         Status: <span class="font-mono">{{ settingsStatus }}</span>
       </p>
 
-      <div v-if="settingsStatus === 'pending'" class="text-gray-500">
+      <div
+        v-if="settingsStatus === 'pending'"
+        class="text-gray-500"
+      >
         Loading...
       </div>
 
-      <div v-else-if="settings" class="space-y-2">
+      <div
+        v-else-if="settings"
+        class="space-y-2"
+      >
         <div><strong>Desktop Font Size:</strong> {{ settings.Desktop_Font_Size }}px</div>
         <div><strong>Tablet Font Size:</strong> {{ settings.Tablet_Font_Size }}px</div>
         <div><strong>Mobile Font Size:</strong> {{ settings.Mobile_Font_Size }}px</div>
         <div><strong>Show Progress Bar:</strong> {{ settings.Show_Top_Progress_Bar }}</div>
 
-        <div v-if="settings.favicon" class="mt-4">
+        <div
+          v-if="settings.favicon"
+          class="mt-4"
+        >
           <strong>Favicon:</strong>
           <img
             :src="getImageUrl(settings, settings.favicon, '32x32')"
@@ -270,7 +321,10 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-else class="text-gray-500">
+      <div
+        v-else
+        class="text-gray-500"
+      >
         No settings found
       </div>
     </section>
@@ -284,11 +338,17 @@ onMounted(() => {
         Status: <span class="font-mono">{{ paginatedStatus }}</span>
       </p>
 
-      <div v-if="paginatedStatus === 'pending'" class="text-gray-500">
+      <div
+        v-if="paginatedStatus === 'pending'"
+        class="text-gray-500"
+      >
         Loading...
       </div>
 
-      <div v-else-if="paginatedProjects" class="space-y-4">
+      <div
+        v-else-if="paginatedProjects"
+        class="space-y-4"
+      >
         <div class="flex items-center gap-4 text-sm text-gray-600">
           <span>Page {{ paginatedProjects.page }} of {{ paginatedProjects.totalPages }}</span>
           <span>Total: {{ paginatedProjects.totalItems }} projects</span>
@@ -313,15 +373,15 @@ onMounted(() => {
         <div class="flex gap-2">
           <button
             :disabled="paginatedProjects.page <= 1"
-            @click="currentPage--; refreshPaginated()"
             class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+            @click="currentPage--; refreshPaginated()"
           >
             Previous
           </button>
           <button
             :disabled="paginatedProjects.page >= paginatedProjects.totalPages"
-            @click="currentPage++; refreshPaginated()"
             class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 disabled:opacity-50"
+            @click="currentPage++; refreshPaginated()"
           >
             Next
           </button>
@@ -339,25 +399,31 @@ onMounted(() => {
         <div class="flex gap-2">
           <button
             v-if="!isSubscribed"
-            @click="subscribe()"
             class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            @click="subscribe()"
           >
             Start Listening for Updates
           </button>
           <button
             v-else
-            @click="unsubscribe()"
             class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            @click="unsubscribe()"
           >
             Stop Listening
           </button>
         </div>
 
-        <div v-if="isSubscribed" class="text-sm text-green-600">
+        <div
+          v-if="isSubscribed"
+          class="text-sm text-green-600"
+        >
           ✓ Subscribed to Portfolio_Projects updates
         </div>
 
-        <div v-if="realtimeProject" class="border rounded p-4 bg-yellow-50">
+        <div
+          v-if="realtimeProject"
+          class="border rounded p-4 bg-yellow-50"
+        >
           <strong class="text-sm">Latest Update:</strong>
           <pre class="text-xs mt-2 overflow-auto">{{ realtimeProject }}</pre>
         </div>

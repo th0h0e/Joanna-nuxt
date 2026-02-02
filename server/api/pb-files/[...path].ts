@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     if (!response.ok) {
       throw createError({
         statusCode: response.status,
-        statusMessage: 'File not found',
+        statusMessage: 'File not found'
       })
     }
 
@@ -33,16 +33,15 @@ export default defineEventHandler(async (event) => {
     setResponseHeaders(event, {
       'Content-Type': response.headers.get('content-type') || 'application/octet-stream',
       'Cache-Control': 'public, max-age=31536000, immutable',
-      'Content-Length': response.headers.get('content-length') || '',
+      'Content-Length': response.headers.get('content-length') || ''
     })
 
     // Return the file buffer
     return new Uint8Array(buffer)
-  }
-  catch (error: any) {
+  } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
-      statusMessage: error.message || 'Failed to fetch file',
+      statusMessage: error.message || 'Failed to fetch file'
     })
   }
 })

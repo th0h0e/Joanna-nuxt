@@ -25,18 +25,17 @@ export default defineEventHandler(async (event) => {
       body,
       headers: {
         ...(authHeader && { Authorization: authHeader }),
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      ignoreResponseError: true,
+      ignoreResponseError: true
     })
 
     return response
-  }
-  catch (error: any) {
+  } catch (error: any) {
     throw createError({
       statusCode: error.statusCode || 500,
       statusMessage: error.message || 'PocketBase request failed',
-      data: error.data,
+      data: error.data
     })
   }
 })
