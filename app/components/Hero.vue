@@ -14,7 +14,7 @@ const imageUrl = computed(() => homepageData.value?.imageUrl || null);
 </script>
 
 <template>
-  <UPageHero :title="homepageData?.title || 'Joanna VDW'">
+  <UPageHero :title="homepageData?.title || 'Joanna VDW'" :ui="{ root: 'h-[100dvh]' }">
     <template #top>
       <div v-if="imageUrl" class="absolute inset-0 -z-10">
         <img
