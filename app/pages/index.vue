@@ -21,6 +21,9 @@ const { data: projects } = await useFetch<PortfolioProject[]>(
 
 const refreshing = ref(false);
 
+// Extract project titles for the index section
+const projectTitles = computed(() => projects.value?.map((p) => p.title) ?? []);
+
 // Helper to get image URLs for a project
 const getProjectImages = (project: PortfolioProject) => {
   if (!project.images || project.images.length === 0) return [];
@@ -46,6 +49,8 @@ async function refreshPortfolio() {
 
 <template>
   <div class="min-h-screen">
+    <ProjectIndex :project-titles="projectTitles" />
+
     <button :disabled="refreshing" class="mb-8" @click="refreshPortfolio">
       {{ refreshing ? "Loading..." : "Refresh Projects" }}
     </button>
