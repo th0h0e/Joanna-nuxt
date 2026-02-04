@@ -48,20 +48,42 @@ async function refreshPortfolio() {
 </script>
 
 <template>
-  <div class="h-screen overflow-y-scroll" style="scroll-snap-type: y mandatory">
-    <button :disabled="refreshing" class="fixed top-4 left-4 z-10 bg-white px-4 py-2 rounded shadow" @click="refreshPortfolio">
+  <div class="h-screen overflow-y-scroll snap-container">
+    <button
+      :disabled="refreshing"
+      class="fixed top-4 left-4 z-10 bg-white px-4 py-2 rounded shadow"
+      @click="refreshPortfolio"
+    >
       {{ refreshing ? "Loading..." : "Refresh Projects" }}
     </button>
 
-    <div v-for="project in projects" :key="project.id" style="scroll-snap-align: start; scroll-snap-stop: always">
-      <MotionCarouselDesktop
+    <div class="snap-point">
+      <ProjectPopup />
+    </div>
+
+    <div v-for="project in projects" :key="project.id" class="snap-point">
+      <CarouselDesktop
         :images="getProjectImages(project)"
+        :project-title="project.title"
+        :project-description="project.description"
+        :project-responsibility="project.responsibility"
         :alt="project.title"
       />
     </div>
 
-    <div style="scroll-snap-align: start; scroll-snap-stop: always">
+    <div class="snap-point">
       <ProjectIndex :project-titles="projectTitles" />
     </div>
   </div>
 </template>
+
+<style scoped>
+.snap-container {
+  scroll-snap-type: y mandatory;
+}
+
+.snap-point {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+</style>
