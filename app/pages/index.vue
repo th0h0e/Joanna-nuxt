@@ -49,8 +49,6 @@ async function refreshPortfolio() {
 
 <template>
   <div class="min-h-screen">
-    <ProjectIndex :project-titles="projectTitles" />
-
     <button :disabled="refreshing" class="mb-8" @click="refreshPortfolio">
       {{ refreshing ? "Loading..." : "Refresh Projects" }}
     </button>
@@ -61,5 +59,7 @@ async function refreshPortfolio() {
         :alt="project.title"
       />
     </div>
+
+    <ProjectIndex :project-titles="projectTitles" />
   </div>
 </template>
