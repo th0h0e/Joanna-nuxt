@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import type { PortfolioProjectsResponse } from "~/shared/types/pocketbase-types";
+// Client-side interface matching the API response structure
+interface PortfolioProject {
+  id: string;
+  title: string;
+  description: string;
+  images: string[];
+  order: number;
+  responsibility: unknown;
+  created: string;
+  updated: string;
+}
 
 // Fetch portfolio projects from server
-const { data: projects } = await useFetch<PortfolioProjectsResponse[]>(
+const { data: projects } = await useFetch<PortfolioProject[]>(
   "/api/portfolio",
   {
     key: "portfolio",
@@ -12,7 +22,7 @@ const { data: projects } = await useFetch<PortfolioProjectsResponse[]>(
 const refreshing = ref(false);
 
 // Helper to get image URLs for a project
-const getProjectImages = (project: PortfolioProjectsResponse) => {
+const getProjectImages = (project: PortfolioProject) => {
   if (!project.images || project.images.length === 0) return [];
   return project.images.map(
     (image: string) =>
@@ -41,18 +51,10 @@ async function refreshPortfolio() {
     </button>
 
     <div v-for="project in projects" :key="project.id" class="mb-16">
-      <UCarousel
-        v-slot="{ item }"
-        loop
-        :items="getProjectImages(project)"
-        :ui="{ item: 'basis-1/3' }"
-      >
-        <img
-          :src="item"
-          :alt="project.title"
-          class="w-full h-96 object-cover rounded-lg"
-        />
-      </UCarousel>
+      <MotionCarouselDesktop
+        :images="getProjectImages(project)"
+        :alt="project.title"
+      />
     </div>
   </div>
 </template>
