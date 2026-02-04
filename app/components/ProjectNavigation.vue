@@ -13,14 +13,18 @@ withDefaults(defineProps<ProjectNavigationProps>(), {
 
 <template>
   <div class="flex flex-col items-center justify-center w-full h-full">
-    <ul class="space-y-4">
-      <li
+    <UPageList>
+      <UPageCard
         v-for="(title, index) in projectTitles"
         :key="index"
-        class="text-2xl font-semibold text-gray-800 hover:text-gray-600 cursor-pointer transition"
+        variant="ghost"
       >
-        {{ title }}
-      </li>
-    </ul>
+        <template #body>
+          <p class="text-2xl font-semibold text-gray-800 hover:text-gray-600 cursor-pointer transition">
+            {{ title }}
+          </p>
+        </template>
+      </UPageCard>
+    </UPageList>
   </div>
 </template>

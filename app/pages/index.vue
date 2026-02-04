@@ -58,6 +58,10 @@ async function refreshPortfolio() {
     </button>
 
     <div class="snap-point">
+      <Hero />
+    </div>
+
+    <div class="snap-point">
       <ProjectPopup />
     </div>
 
