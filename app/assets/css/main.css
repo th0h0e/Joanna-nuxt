@@ -1,8 +1,14 @@
+@font-face {
+  font-family: 'EnduroWeb';
+  src: url('/fonts/EnduroWeb-Medium.woff') format('woff');
+  font-weight: 500;
+}
+
 @import "tailwindcss";
 @import "@nuxt/ui";
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
+  --font-sans: 'EnduroWeb', sans-serif;
 
   --color-green-50: #EFFDF5;
   --color-green-100: #D9FBE8;
