@@ -48,18 +48,20 @@ async function refreshPortfolio() {
 </script>
 
 <template>
-  <div class="min-h-screen">
-    <button :disabled="refreshing" class="mb-8" @click="refreshPortfolio">
+  <div class="h-screen overflow-y-scroll" style="scroll-snap-type: y mandatory">
+    <button :disabled="refreshing" class="fixed top-4 left-4 z-10 bg-white px-4 py-2 rounded shadow" @click="refreshPortfolio">
       {{ refreshing ? "Loading..." : "Refresh Projects" }}
     </button>
 
-    <div v-for="project in projects" :key="project.id" class="mb-16">
+    <div v-for="project in projects" :key="project.id" style="scroll-snap-align: start; scroll-snap-stop: always">
       <MotionCarouselDesktop
         :images="getProjectImages(project)"
         :alt="project.title"
       />
     </div>
 
-    <ProjectIndex :project-titles="projectTitles" />
+    <div style="scroll-snap-align: start; scroll-snap-stop: always">
+      <ProjectIndex :project-titles="projectTitles" />
+    </div>
   </div>
 </template>
