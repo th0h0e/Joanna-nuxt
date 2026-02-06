@@ -1,8 +1,16 @@
 export default defineAppConfig({
   ui: {
     colors: {
-      primary: 'green',
-      neutral: 'slate'
-    }
-  }
-})
+      primary: "black",
+      secondary: "purple",
+      neutral: "neutral",
+    },
+    modal: {
+      slots: {
+        title: "uppercase text-center",
+        description: "uppercase text-center",
+        body: "text-center",
+      },
+    },
+  },
+});

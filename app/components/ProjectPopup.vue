@@ -18,13 +18,13 @@ withDefaults(defineProps<Props>(), {
     :overlay="false"
     :close="false"
   >
-    <UButton :label="title" color="neutral" variant="subtle" />
+    <span class="text-4xl font-bold cursor-pointer uppercase">{{ title }}</span>
 
     <template #body>
-      <div v-if="responsibility" class="space-y-4">
+      <div v-if="responsibility" class="space-y-4 uppercase">
         <div>
-          <p class="text-sm font-semibold">Responsibility</p>
-          <p class="text-sm text-gray-600">{{ responsibility }}</p>
+          <p class="text-sm">Responsibility</p>
+          <p class="text-sm">{{ responsibility }}</p>
         </div>
       </div>
     </template>

@@ -19,8 +19,8 @@ withDefaults(defineProps<ProjectIndexProps>(), {
     :style="{ height: '100lvh' }"
   >
     <ProjectNavigation
-      :projectTitles="projectTitles"
-      :settingsData="settingsData"
+      :project-titles="projectTitles"
+      :settings-data="settingsData"
     />
   </section>
 </template>

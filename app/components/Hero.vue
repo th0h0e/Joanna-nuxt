@@ -28,7 +28,7 @@ const imageUrl = computed(() => homepageData.value?.imageUrl || null);
           :src="imageUrl"
           alt="Hero background"
           class="w-full h-full object-cover"
-        />
+        >
       </div>
     </template>
   </UPageHero>

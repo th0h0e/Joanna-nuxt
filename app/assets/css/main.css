@@ -1,24 +1,17 @@
 @font-face {
-  font-family: 'EnduroWeb';
-  src: url('/fonts/EnduroWeb-Medium.woff') format('woff');
-  font-weight: 500;
+  font-family: "EnduroWeb";
+  src: url("/fonts/EnduroWeb-Medium.woff") format("woff");
 }
 
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-@theme static {
-  --font-sans: 'EnduroWeb', sans-serif;
+@theme {
+  --font-sans: "EnduroWeb", sans-serif;
 
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
-  --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
+  --ui-radius: 0.1rem;
+
+  --breakpoint-3xl: 1920px;
+  --breakpoint-4xl: 2560px;
+  --breakpoint-5xl: 3840px;
 }
