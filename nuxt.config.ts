@@ -2,6 +2,13 @@
 export default defineNuxtConfig({
   modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxt/hints", "@nuxt/image", "@nuxt/scripts", "@compodium/nuxt"],
 
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
+
   devtools: {
     enabled: true,
   },
@@ -9,8 +16,8 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css"],
 
   colorMode: {
-    preference: "light",
-    fallback: "light",
+    preference: "dark",
+    fallback: "dark",
   },
 
   routeRules: {
@@ -23,6 +30,17 @@ export default defineNuxtConfig({
     public: {
       pocketbaseUrl: "https://admin.kontext.site", // available on client
     },
+  },
+
+  ui: {
+    theme: {
+      defaultVariants: {
+        size: 'sm'
+      }
+    }
+  },
+  devServer: {
+    port: 3002
   },
 
   compatibilityDate: "2026-03-27",

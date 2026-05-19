@@ -117,6 +117,16 @@ const getStatusColor = (status: string) => {
       </div>
     </div>
 
+    <!-- Projects Table -->
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold">
+          All Projects
+        </h2>
+      </div>
+      <ConfigTable />
+    </div>
+
     <!-- Quick Actions -->
     <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
       <UButton
