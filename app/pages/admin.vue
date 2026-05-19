@@ -20,7 +20,7 @@ const projects = ref([
 ])
 
 const getStatusColor = (status: string) => {
-  return status === 'published' ? 'green' : 'yellow'
+  return status === 'published' ? 'success' : 'warning'
 }
 </script>
 
@@ -97,13 +97,13 @@ const getStatusColor = (status: string) => {
             </UBadge>
             <div class="flex gap-2">
               <UButton
-                color="gray"
+                color="neutral"
                 variant="ghost"
                 size="xs"
                 icon="i-heroicons-pencil"
               />
               <UButton
-                color="gray"
+                color="neutral"
                 variant="ghost"
                 size="xs"
                 icon="i-heroicons-trash"
@@ -117,7 +117,7 @@ const getStatusColor = (status: string) => {
     <!-- Quick Actions -->
     <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
       <UButton
-        color="white"
+        color="neutral"
         size="lg"
         block
         icon="i-heroicons-document-plus"
@@ -126,7 +126,7 @@ const getStatusColor = (status: string) => {
         Create New Project
       </UButton>
       <UButton
-        color="white"
+        color="neutral"
         size="lg"
         block
         icon="i-heroicons-cog-6-tooth"
@@ -135,7 +135,7 @@ const getStatusColor = (status: string) => {
         Settings
       </UButton>
       <UButton
-        color="white"
+        color="neutral"
         size="lg"
         block
         icon="i-heroicons-chart-bar"

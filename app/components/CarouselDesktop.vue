@@ -7,24 +7,38 @@ interface Props {
   alt?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   projectTitle: "Project",
   projectDescription: "",
+  projectResponsibility: undefined,
   alt: "Image",
 });
 </script>
 
 <template>
-  <div class="relative w-screen h-[100dvh]">
+  <div class="relative w-screen h-dvh">
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
       <div class="pointer-events-auto">
-        <ProjectPopup
+        <UModal
           :title="projectTitle"
           :description="projectDescription"
-          :responsibility="projectResponsibility"
-        />
+          :overlay="false"
+          :close="false"
+        >
+          <span class="text-4xl font-bold cursor-pointer uppercase">{{ projectTitle }}</span>
+
+          <template #body>
+            <div v-if="projectResponsibility" class="space-y-4 uppercase">
+              <div>
+                <p class="text-sm">Responsibility</p>
+                <p class="text-sm">{{ projectResponsibility }}</p>
+              </div>
+            </div>
+          </template>
+        </UModal>
       </div>
     </div>
+
     <UCarousel
       v-if="images.length > 0"
       v-slot="{ item }"

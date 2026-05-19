@@ -8,6 +8,9 @@
 /* ============================================
    EXAMPLE 1: Basic Fetch (Default Sort by Order)
    ============================================ */
+
+import { defineHandler } from "nitro";
+import { fetch } from "nitro";
 export const exampleBasicFetch = async () => {
   const data = await $fetch('/api/portfolio')
   console.log('Portfolio projects:', data)
@@ -132,12 +135,16 @@ export const exampleErrorHandling = async () => {
     })
     return { success: true, data }
   }
-  catch (error: any) {
+  catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    const statusCode = typeof (error as { statusCode?: number }).statusCode === 'number'
+      ? (error as { statusCode: number }).statusCode
+      : undefined
     console.error('Failed to fetch:', error)
     return {
       success: false,
-      error: error.message,
-      statusCode: error.statusCode
+      error: message,
+      statusCode
     }
   }
 }

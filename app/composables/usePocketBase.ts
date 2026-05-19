@@ -12,9 +12,13 @@
 
 import PocketBase from 'pocketbase'
 import type {
-  TypedPocketBase,
-  CollectionResponses
-} from '~/shared/types/pocketbase-types'
+  TypedPocketBase
+} from '#shared/types/pocketbase-types'
+
+interface PocketBaseRecord {
+  id: string
+  collectionName: string
+}
 
 let pb: TypedPocketBase | null = null
 
@@ -72,7 +76,7 @@ export function usePocketBase(): TypedPocketBase {
 
 /**
  * Get the URL for a PocketBase file (image, document, etc.)
- * Proxies through /api/pb-files for security
+ * Uses the public runtime config for the PocketBase URL
  *
  * @example
  * const imageUrl = usePocketBaseFileUrl(project, 'hero.jpg', { thumb: '800x600' })
@@ -80,8 +84,8 @@ export function usePocketBase(): TypedPocketBase {
  * // In template:
  * <img :src="usePocketBaseFileUrl(record, record.Hero_Image, { thumb: '400x300' })" />
  */
-export function usePocketBaseFileUrl<T extends keyof CollectionResponses>(
-  record: CollectionResponses[T] | null | undefined,
+export function usePocketBaseFileUrl(
+  record: PocketBaseRecord | null | undefined,
   filename: string,
   options?: {
     thumb?: string // e.g., '100x100', '0x100', '100x0'
@@ -91,10 +95,11 @@ export function usePocketBaseFileUrl<T extends keyof CollectionResponses>(
     return ''
   }
 
+  const { pocketbaseUrl } = useRuntimeConfig().public
   const collection = record.collectionName
   const recordId = record.id
 
-  let url = `/api/pb-files/${collection}/${recordId}/${filename}`
+  let url = `${pocketbaseUrl}/api/files/${collection}/${recordId}/${filename}`
 
   if (options?.thumb) {
     url += `?thumb=${options.thumb}`

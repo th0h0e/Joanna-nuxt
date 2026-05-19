@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { Settings } from "../config/pocketbase"
+import type { SettingsResponse } from '#shared/types/pocketbase-types'
 
 interface ProjectNavigationProps {
   projectTitles: string[]
-  settingsData?: Settings | null
+  settingsData?: SettingsResponse | null
 }
 
 withDefaults(defineProps<ProjectNavigationProps>(), {

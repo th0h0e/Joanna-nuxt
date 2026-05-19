@@ -3,7 +3,7 @@
  * Handles user authentication and session management
  */
 
-import type { UsersResponse } from '~/shared/types/pocketbase-types'
+import type { UsersResponse } from '#shared/types/pocketbase-types'
 
 export function usePocketBaseAuth() {
   const pb = usePocketBase()
@@ -13,7 +13,7 @@ export function usePocketBaseAuth() {
   const token = useState<string>('pb_token', () => pb.authStore.token)
 
   // Listen to auth changes
-  pb.authStore.onChange((newToken, model) => {
+  pb.authStore.onChange((newToken: string, model: unknown) => {
     user.value = model as UsersResponse | null
     token.value = newToken
   })
@@ -29,10 +29,11 @@ export function usePocketBaseAuth() {
         user: authData.record as UsersResponse,
         token: authData.token
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Login failed'
       return {
         success: false,
-        error: error.message || 'Login failed'
+        error: message
       }
     }
   }
@@ -61,10 +62,11 @@ export function usePocketBaseAuth() {
         success: true,
         user: record as UsersResponse
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Registration failed'
       return {
         success: false,
-        error: error.message || 'Registration failed'
+        error: message
       }
     }
   }
@@ -76,10 +78,11 @@ export function usePocketBaseAuth() {
     try {
       await pb.collection('users').requestPasswordReset(email)
       return { success: true }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Password reset request failed'
       return {
         success: false,
-        error: error.message || 'Password reset request failed'
+        error: message
       }
     }
   }
@@ -99,10 +102,11 @@ export function usePocketBaseAuth() {
         success: true,
         user: authData.record as UsersResponse
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Token refresh failed'
       return {
         success: false,
-        error: error.message || 'Token refresh failed'
+        error: message
       }
     }
   }

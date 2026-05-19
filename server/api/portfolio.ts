@@ -1,6 +1,19 @@
 export default defineEventHandler(async (event) => {
-  const response = await fetch(
-    "https://admin.kontext.site/api/collections/Portfolio_Projects/records",
+  const { pocketbaseUrl } = useRuntimeConfig(event);
+
+  const response: {
+    items: Array<{
+      id: string;
+      Title: string;
+      Description: string;
+      Images: string[];
+      Order: number;
+      Responsibility_json: unknown;
+      created: string;
+      updated: string;
+    }>;
+  } = await fetch(
+    `${pocketbaseUrl}/api/collections/Portfolio_Projects/records`,
   ).then((res) => res.json());
 
   // Transform the response

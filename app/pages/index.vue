@@ -19,50 +19,29 @@ const { data: projects } = await useFetch<PortfolioProject[]>(
   },
 );
 
-const refreshing = ref(false);
-
 // Extract project titles for the index section
 const projectTitles = computed(() => projects.value?.map((p) => p.title) ?? []);
+
+const { pocketbaseUrl } = useRuntimeConfig().public;
 
 // Helper to get image URLs for a project
 const getProjectImages = (project: PortfolioProject) => {
   if (!project.images || project.images.length === 0) return [];
   return project.images.map(
     (image: string) =>
-      `https://admin.kontext.site/api/files/Portfolio_Projects/${project.id}/${image}?thumb=1200x800`,
+      `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${image}?thumb=1200x800`,
   );
 };
 
-// Refresh portfolio data
-async function refreshPortfolio() {
-  refreshing.value = true;
-  try {
-    // Invalidate cache on server
-    await $fetch("/api/portfolio/invalidate");
-    // Then refetch the data
-    await refreshNuxtData("portfolio");
-  } finally {
-    refreshing.value = false;
-  }
-}
+
 </script>
 
 <template>
   <div class="h-screen overflow-y-scroll snap-container">
-    <button
-      :disabled="refreshing"
-      class="fixed top-4 left-4 z-10 bg-white px-4 py-2 rounded shadow"
-      @click="refreshPortfolio"
-    >
-      {{ refreshing ? "Loading..." : "Refresh Projects" }}
-    </button>
+    <RefreshButton cache-key="portfolio" invalidate-url="/api/portfolio/invalidate" />
 
     <div class="snap-point">
-      <Hero />
-    </div>
-
-    <div class="snap-point">
-      <ProjectPopup />
+      <IndexHero />
     </div>
 
     <div v-for="project in projects" :key="project.id" class="snap-point">
@@ -73,6 +52,7 @@ async function refreshPortfolio() {
         :project-responsibility="project.responsibility"
         :alt="project.title"
       />
+
     </div>
 
     <div class="snap-point">
