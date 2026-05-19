@@ -13,6 +13,8 @@ withDefaults(defineProps<Props>(), {
   projectResponsibility: undefined,
   alt: "Image",
 });
+
+const isPopupOpen = ref(false)
 </script>
 
 <template>
@@ -20,12 +22,16 @@ withDefaults(defineProps<Props>(), {
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
       <div class="pointer-events-auto">
         <UModal
+          v-model:open="isPopupOpen"
           :title="projectTitle"
           :description="projectDescription"
           :overlay="false"
           :close="false"
         >
-          <span class="text-4xl cursor-pointer text-pretty tracking-tight uppercase">{{ projectTitle }}</span>
+          <span
+            class="text-4xl cursor-pointer text-pretty tracking-tight uppercase transition-opacity duration-300 text-white"
+            :class="isPopupOpen ? 'opacity-0' : 'opacity-100'"
+          >{{ projectTitle }}</span>
 
           <template #body>
             <div v-if="projectResponsibility" class="space-y-4 uppercase">

@@ -18,7 +18,8 @@ const imageUrl = computed(() => homepageData.value?.imageUrl || null);
     :title="homepageData?.title || 'Joanna VDW'"
     :ui="{
       root: 'h-[100dvh] flex items-center justify-center',
-      container: 'py-0 max-w-none'
+      container: 'py-0 max-w-none',
+      title: 'text-white',
     }"
   >
     <template #top>
