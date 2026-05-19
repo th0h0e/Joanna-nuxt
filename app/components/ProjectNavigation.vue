@@ -20,7 +20,7 @@ withDefaults(defineProps<ProjectNavigationProps>(), {
         variant="ghost"
       >
         <template #body>
-          <p class="text-2xl font-semibold text-gray-800 hover:text-gray-600 cursor-pointer transition">
+          <p class="text-2xl text-center text-black">
             {{ title }}
           </p>
         </template>
