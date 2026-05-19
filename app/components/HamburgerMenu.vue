@@ -36,7 +36,7 @@ watch(isOpen, (value) => {
           class="absolute top-6 right-6 z-50 size-6 cursor-pointer bg-black transition-colors"
           @click="isOpen = false"
         />
-        <ProjectNavigation :project-titles="projectTitles" />
+        <ProjectNavigation :project-titles="projectTitles" @navigate="isOpen = false" />
       </div>
     </template>
   </UModal>

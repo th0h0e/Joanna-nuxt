@@ -45,6 +45,7 @@ const getProjectImages = (project: PortfolioProject) => {
     </div>
 
     <div v-for="project in projects" :key="project.id" class="snap-point">
+      <a :id="`project-${project.title.replace(/\s+/g, '-').toLowerCase()}`"></a>
       <CarouselDesktop
         :images="getProjectImages(project)"
         :project-title="project.title"

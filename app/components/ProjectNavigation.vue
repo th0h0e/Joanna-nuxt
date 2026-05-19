@@ -6,9 +6,22 @@ interface ProjectNavigationProps {
   settingsData?: SettingsResponse | null
 }
 
-withDefaults(defineProps<ProjectNavigationProps>(), {
+const props = withDefaults(defineProps<ProjectNavigationProps>(), {
   settingsData: null,
 })
+
+const emit = defineEmits<{
+  navigate: []
+}>()
+
+const scrollToProject = (title: string) => {
+  const slug = title.replace(/\s+/g, '-').toLowerCase()
+  const el = document.getElementById(`project-${slug}`)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' })
+    emit('navigate')
+  }
+}
 </script>
 
 <template>
@@ -18,6 +31,7 @@ withDefaults(defineProps<ProjectNavigationProps>(), {
         v-for="(title, index) in projectTitles"
         :key="index"
         variant="ghost"
+        @click="scrollToProject(title)"
       >
         <template #body>
           <span class="text-4xl text-black uppercase cursor-pointer">{{ title }}</span>
