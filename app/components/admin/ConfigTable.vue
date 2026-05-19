@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import { useSortable } from '@vueuse/integrations/useSortable'
 
 interface PortfolioProject {
   id: string
@@ -26,10 +27,6 @@ const getThumbnail = (project: PortfolioProject) => {
 }
 
 const columns: TableColumn<PortfolioProject>[] = [
-  {
-    accessorKey: 'order',
-    header: 'Order'
-  },
   {
     accessorKey: 'images',
     header: 'Thumbnail',
@@ -60,18 +57,37 @@ const columns: TableColumn<PortfolioProject>[] = [
     }
   },
   {
-    accessorKey: 'order',
-    header: 'Sort Order',
-    cell: ({ row }) => h('span', { class: 'text-sm' }, row.original.order)
+    accessorKey: 'responsibility',
+    header: 'Responsibilities',
+    cell: ({ row }) => {
+      const resp = row.original.responsibility
+      if (!resp) return h('span', { class: 'text-dimmed text-sm' }, '—')
+      const text = typeof resp === 'string' ? resp : JSON.stringify(resp)
+      return h('p', { class: 'text-sm truncate max-w-xs' }, text.length > 60 ? text.slice(0, 60) + '…' : text)
+    }
   }
 ]
+
+const table = ref()
+
+watch(() => table.value, (el) => {
+  if (el) {
+    useSortable('.sortable-tbody', data, {
+      animation: 150
+    })
+  }
+})
 </script>
 
 <template>
   <UTable
+    ref="table"
     :data="data"
     :columns="columns"
     :loading="status === 'pending' || status === 'idle'"
-    class="flex-1 h-80"
+    :ui="{
+      tbody: 'sortable-tbody'
+    }"
+    class="flex-1"
   />
 </template>
