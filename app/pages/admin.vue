@@ -39,84 +39,6 @@ const getStatusColor = (status: string) => {
       <RefreshButton cache-key="portfolio" invalidate-url="/api/portfolio/invalidate" />
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div
-        v-for="stat in stats"
-        :key="stat.label"
-        class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
-      >
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-sm text-gray-600 dark:text-gray-400">{{ stat.label }}</span>
-          <UIcon
-            :name="stat.icon"
-            class="w-5 h-5 text-gray-400"
-          />
-        </div>
-        <div class="text-2xl font-bold">
-          {{ stat.value }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Projects Section -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold">
-          Recent Projects
-        </h2>
-        <UButton
-          color="primary"
-          size="sm"
-        >
-          Add New Project
-        </UButton>
-      </div>
-
-      <div class="space-y-3">
-        <div
-          v-for="project in projects"
-          :key="project.id"
-          class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-850 transition-colors"
-        >
-          <div class="flex-1">
-            <h3 class="font-medium mb-1">
-              {{ project.title }}
-            </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              {{ new Date(project.date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              }) }}
-            </p>
-          </div>
-          <div class="flex items-center gap-3">
-            <UBadge
-              :color="getStatusColor(project.status)"
-              variant="subtle"
-            >
-              {{ project.status }}
-            </UBadge>
-            <div class="flex gap-2">
-              <UButton
-                color="neutral"
-                variant="ghost"
-                size="xs"
-                icon="i-heroicons-pencil"
-              />
-              <UButton
-                color="neutral"
-                variant="ghost"
-                size="xs"
-                icon="i-heroicons-trash"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Projects Table -->
     <div class="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
       <div class="flex items-center justify-between mb-6">
@@ -127,35 +49,5 @@ const getStatusColor = (status: string) => {
       <ConfigTable />
     </div>
 
-    <!-- Quick Actions -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-      <UButton
-        color="neutral"
-        size="lg"
-        block
-        icon="i-heroicons-document-plus"
-        class="justify-start"
-      >
-        Create New Project
-      </UButton>
-      <UButton
-        color="neutral"
-        size="lg"
-        block
-        icon="i-heroicons-cog-6-tooth"
-        class="justify-start"
-      >
-        Settings
-      </UButton>
-      <UButton
-        color="neutral"
-        size="lg"
-        block
-        icon="i-heroicons-chart-bar"
-        class="justify-start"
-      >
-        View Analytics
-      </UButton>
-    </div>
   </div>
 </template>
