@@ -22,11 +22,12 @@ async function refresh() {
 </script>
 
 <template>
-  <button
+  <UButton
+    icon="i-lucide-rotate-ccw"
+    size="md"
+    color="neutral"
+    variant="outline"
     :disabled="refreshing"
-    class="fixed top-4 left-4 z-10 bg-white px-4 py-2 rounded shadow"
     @click="refresh"
-  >
-    {{ refreshing ? "Loading..." : "Refresh Projects" }}
-  </button>
+  />
 </template>

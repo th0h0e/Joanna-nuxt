@@ -20,9 +20,7 @@ withDefaults(defineProps<ProjectNavigationProps>(), {
         variant="ghost"
       >
         <template #body>
-          <p class="text-2xl text-center text-black">
-            {{ title }}
-          </p>
+          <span class="text-4xl text-black uppercase cursor-pointer">{{ title }}</span>
         </template>
       </UPageCard>
     </UPageList>

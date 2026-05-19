@@ -25,7 +25,7 @@ withDefaults(defineProps<Props>(), {
           :overlay="false"
           :close="false"
         >
-          <span class="text-4xl font-bold cursor-pointer uppercase">{{ projectTitle }}</span>
+          <span class="text-4xl cursor-pointer text-pretty tracking-tight uppercase">{{ projectTitle }}</span>
 
           <template #body>
             <div v-if="projectResponsibility" class="space-y-4 uppercase">

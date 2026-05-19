@@ -27,13 +27,16 @@ const getStatusColor = (status: string) => {
 <template>
   <div class="min-h-screen p-6 md:p-8 lg:p-12">
     <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold mb-2">
-        Portfolio Admin Dashboard
-      </h1>
-      <p class="text-gray-600 dark:text-gray-400">
-        Manage your portfolio projects and content
-      </p>
+    <div class="mb-8 flex items-start justify-between">
+      <div>
+        <h1 class="text-3xl font-bold mb-2">
+          Portfolio Admin Dashboard
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">
+          Manage your portfolio projects and content
+        </p>
+      </div>
+      <RefreshButton cache-key="portfolio" invalidate-url="/api/portfolio/invalidate" />
     </div>
 
     <!-- Stats Grid -->

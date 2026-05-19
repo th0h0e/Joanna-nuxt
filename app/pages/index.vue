@@ -38,7 +38,6 @@ const getProjectImages = (project: PortfolioProject) => {
 
 <template>
   <div class="h-screen overflow-y-scroll snap-container">
-    <RefreshButton cache-key="portfolio" invalidate-url="/api/portfolio/invalidate" />
     <HamburgerMenu :project-titles="projectTitles" />
 
     <div class="snap-point">
