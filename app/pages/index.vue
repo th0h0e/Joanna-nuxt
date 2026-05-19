@@ -1,15 +1,5 @@
 <script setup lang="ts">
-// Client-side interface matching the API response structure
-interface PortfolioProject {
-  id: string;
-  title: string;
-  description: string;
-  images: string[];
-  order: number;
-  responsibility: unknown;
-  created: string;
-  updated: string;
-}
+import type { PortfolioProject } from '#shared/types/pocketbase-types'
 
 // Fetch portfolio projects from server
 const { data: projects } = await useFetch<PortfolioProject[]>(

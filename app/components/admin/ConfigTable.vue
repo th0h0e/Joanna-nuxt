@@ -2,26 +2,14 @@
 import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { useSortable } from '@vueuse/integrations/useSortable'
+import type { PortfolioProject } from '#shared/types/pocketbase-types'
 
 const UButton = resolveComponent('UButton')
 
-interface PortfolioProject {
-  id: string
-  title: string
-  description: string
-  images: string[]
-  order: number
-  responsibility: unknown
-  created: string
-  updated: string
-}
-
 const { pocketbaseUrl } = useRuntimeConfig().public
 
-const { data, status } = useLazyFetch<PortfolioProject[]>('/api/portfolio', {
-  key: 'portfolio-table',
-  transform: (data) => data ?? [],
-  server: false
+const { data, status } = await useFetch<PortfolioProject[]>('/api/portfolio', {
+  key: 'portfolio'
 })
 
 const getThumbnail = (project: PortfolioProject) => {
@@ -93,26 +81,24 @@ const columns: TableColumn<PortfolioProject>[] = [
   }
 ]
 
+const projects = computed(() => data.value ?? [])
+
+useSortable('.sortable-tbody', projects, {
+  animation: 150
+})
+
 const expanded = ref<Record<string, boolean>>({})
 
-const table = ref()
-
-watch(() => table.value, (el) => {
-  if (el) {
-    useSortable('.sortable-tbody', data, {
-      animation: 150
-    })
-  }
-})
+const table = useTemplateRef('table')
 </script>
 
 <template>
   <UTable
     ref="table"
     v-model:expanded="expanded"
-    :data="data"
+    :data="projects"
     :columns="columns"
-    :loading="status === 'pending' || status === 'idle'"
+    :loading="status === 'pending'"
     :ui="{
       tbody: 'sortable-tbody',
       tr: 'data-[expanded=true]:bg-elevated/50'
@@ -127,7 +113,7 @@ watch(() => table.value, (el) => {
           :src="getImageUrl(row.original, image)"
           :alt="row.original.title"
           loading="lazy"
-          class="h-32 w-auto flex-shrink-0 object-cover rounded"
+          class="h-32 w-auto shrink-0 object-cover rounded"
         >
       </div>
       <div v-else class="p-4 text-sm text-dimmed">

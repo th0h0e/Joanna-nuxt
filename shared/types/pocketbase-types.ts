@@ -285,3 +285,18 @@ export type TypedPocketBase = {
     idOrName: T,
   ): RecordService<CollectionResponses[T]>
 } & PocketBase
+
+// ─── API Response Types (non-generated) ───────────────────────────────────────
+// These types represent the camelCase shape returned by our Nitro server API routes,
+// after transforming PocketBase's PascalCase field names.
+
+export type PortfolioProject = {
+  id: string
+  title: string
+  description: string
+  images: string[]
+  order: number
+  responsibility: unknown
+  created: string
+  updated: string
+}
