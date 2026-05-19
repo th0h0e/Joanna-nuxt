@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { useSortable } from '@vueuse/integrations/useSortable'
+
+const UButton = resolveComponent('UButton')
 
 interface PortfolioProject {
   id: string
@@ -26,7 +29,29 @@ const getThumbnail = (project: PortfolioProject) => {
   return `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${project.images[0]}?thumb=120x80`
 }
 
+const getImageUrl = (project: PortfolioProject, image: string) => {
+  return `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${image}?thumb=400x300`
+}
+
 const columns: TableColumn<PortfolioProject>[] = [
+  {
+    id: 'expand',
+    cell: ({ row }) =>
+      h(UButton, {
+        color: 'neutral',
+        variant: 'ghost',
+        icon: 'i-lucide-chevron-down',
+        square: true,
+        'aria-label': 'Expand',
+        ui: {
+          leadingIcon: [
+            'transition-transform',
+            row.getIsExpanded() ? 'duration-200 rotate-180' : ''
+          ]
+        },
+        onClick: () => row.toggleExpanded()
+      })
+  },
   {
     accessorKey: 'images',
     header: 'Thumbnail',
@@ -68,6 +93,8 @@ const columns: TableColumn<PortfolioProject>[] = [
   }
 ]
 
+const expanded = ref<Record<string, boolean>>({})
+
 const table = ref()
 
 watch(() => table.value, (el) => {
@@ -82,12 +109,30 @@ watch(() => table.value, (el) => {
 <template>
   <UTable
     ref="table"
+    v-model:expanded="expanded"
     :data="data"
     :columns="columns"
     :loading="status === 'pending' || status === 'idle'"
     :ui="{
-      tbody: 'sortable-tbody'
+      tbody: 'sortable-tbody',
+      tr: 'data-[expanded=true]:bg-elevated/50'
     }"
     class="flex-1"
-  />
+  >
+    <template #expanded="{ row }">
+      <div v-if="row.original.images && row.original.images.length" class="flex gap-3 p-4 overflow-x-auto">
+        <img
+          v-for="image in row.original.images"
+          :key="image"
+          :src="getImageUrl(row.original, image)"
+          :alt="row.original.title"
+          loading="lazy"
+          class="h-32 w-auto flex-shrink-0 object-cover rounded"
+        >
+      </div>
+      <div v-else class="p-4 text-sm text-dimmed">
+        No images
+      </div>
+    </template>
+  </UTable>
 </template>
