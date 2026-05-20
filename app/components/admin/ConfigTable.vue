@@ -78,6 +78,18 @@ const columns: TableColumn<PortfolioProject>[] = [
       const text = typeof resp === 'string' ? resp : JSON.stringify(resp)
       return h('p', { class: 'text-sm truncate max-w-xs' }, text.length > 60 ? text.slice(0, 60) + '…' : text)
     }
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) =>
+      h(UButton, {
+        color: 'neutral',
+        variant: 'ghost',
+        icon: 'i-lucide-settings',
+        square: true,
+        'aria-label': 'Settings',
+        onClick: () => openSettings(row.original)
+      })
   }
 ]
 
@@ -90,6 +102,14 @@ useSortable('.sortable-tbody', projects, {
 const expanded = ref<Record<string, boolean>>({})
 
 const table = useTemplateRef('table')
+
+const drawerOpen = ref(false)
+const selectedProject = ref<PortfolioProject | null>(null)
+
+const openSettings = (project: PortfolioProject) => {
+  selectedProject.value = project
+  drawerOpen.value = true
+}
 </script>
 
 <template>
@@ -121,4 +141,12 @@ const table = useTemplateRef('table')
       </div>
     </template>
   </UTable>
+
+  <UDrawer v-model:open="drawerOpen" :title="selectedProject?.title ?? 'Settings'">
+    <template #body>
+      <div class="p-4">
+        <p class="text-sm text-dimmed">Settings for {{ selectedProject?.title }}</p>
+      </div>
+    </template>
+  </UDrawer>
 </template>
