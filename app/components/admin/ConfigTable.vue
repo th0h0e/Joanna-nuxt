@@ -8,7 +8,7 @@ const UButton = resolveComponent('UButton')
 
 const { pocketbaseUrl } = useRuntimeConfig().public
 
-const { data, status } = await useFetch<PortfolioProject[]>('/api/portfolio', {
+const { data, status, refresh } = await useFetch<PortfolioProject[]>('/api/portfolio', {
   key: 'portfolio'
 })
 
@@ -93,10 +93,38 @@ const columns: TableColumn<PortfolioProject>[] = [
   }
 ]
 
-const projects = computed(() => data.value ?? [])
+// useSortable requires a writable ref — computed is read-only and won't update on drag
+const projects = ref<PortfolioProject[]>(data.value ?? [])
+
+// Sync from useFetch into our writable ref (initial load + refreshes)
+watch(data, (newData) => {
+  if (newData) projects.value = [...newData]
+}, { immediate: true })
+
+const toast = useToast()
+
+const saveOrder = async () => {
+  const orders = projects.value.map((project, index) => ({
+    id: project.id,
+    order: index
+  }))
+
+  try {
+    await $fetch('/api/portfolio/reorder', {
+      method: 'POST',
+      body: { orders }
+    })
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to save order'
+    toast.add({ title: 'Reorder failed', description: message, color: 'error' })
+  }
+}
 
 useSortable('.sortable-tbody', projects, {
-  animation: 150
+  animation: 150,
+  onEnd: () => {
+    saveOrder()
+  }
 })
 
 const expanded = ref<Record<string, boolean>>({})
@@ -109,6 +137,16 @@ const selectedProject = ref<PortfolioProject | null>(null)
 const openSettings = (project: PortfolioProject) => {
   selectedProject.value = project
   drawerOpen.value = true
+}
+
+const onFormSuccess = () => {
+  drawerOpen.value = false
+  refresh()
+}
+
+const onDeleteSuccess = () => {
+  drawerOpen.value = false
+  refresh()
 }
 </script>
 
@@ -134,7 +172,7 @@ const openSettings = (project: PortfolioProject) => {
           :alt="row.original.title"
           loading="lazy"
           class="h-32 w-auto shrink-0 object-cover rounded"
-        >
+        />
       </div>
       <div v-else class="p-4 text-sm text-dimmed">
         No images
@@ -142,11 +180,14 @@ const openSettings = (project: PortfolioProject) => {
     </template>
   </UTable>
 
-  <UDrawer v-model:open="drawerOpen" :title="selectedProject?.title ?? 'Settings'">
+  <UDrawer v-model:open="drawerOpen" :title="selectedProject?.title ?? 'Project Settings'">
     <template #body>
-      <div class="p-4">
-        <p class="text-sm text-dimmed">Settings for {{ selectedProject?.title }}</p>
-      </div>
+      <SettingsForm
+        v-if="selectedProject"
+        :project="selectedProject"
+        @success="onFormSuccess"
+        @deleted="onDeleteSuccess"
+      />
     </template>
   </UDrawer>
 </template>
