@@ -57,6 +57,16 @@ const newImages = ref<File[]>([])
 const existingImages = ref<string[]>([...props.images])
 const removedImages = ref<Set<string>>(new Set())
 
+// Reset state when props change (e.g. different project selected)
+watch(
+  () => [props.projectId, props.images] as const,
+  ([_newId, newImgs]) => {
+    existingImages.value = [...newImgs]
+    removedImages.value = new Set()
+    newImages.value = []       // ← note: newImages, not newFiles
+  }
+)
+
 const displayImages = computed(() =>
   existingImages.value.filter(img => !removedImages.value.has(img))
 )
@@ -76,8 +86,8 @@ const toggleRemoveImage = (image: string) => {
 // ── Expose for parent to use in API calls ─────────────────────────────────
 async function getFormDataEntries(formData: FormData) {
   // Delete removed images
-  for (const filename of removedImages.value) {
-    formData.append('images_remove', filename)
+  if (removedImages.value.size > 0) {
+    formData.append('images_remove', JSON.stringify([...removedImages.value]))
   }
 
   // Append new (compressed) images

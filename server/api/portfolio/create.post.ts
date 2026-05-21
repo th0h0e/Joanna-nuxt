@@ -1,11 +1,5 @@
-import { defineEventHandler, readMultipartFormData, readBody, createError } from 'h3'
-
 export default defineEventHandler(async (event) => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
-
-  if (event.method !== 'POST') {
-    throw createError({ statusCode: 405, statusMessage: 'Method not allowed' })
-  }
 
   const contentType = getRequestHeader(event, 'content-type') || ''
 
@@ -53,7 +47,6 @@ export default defineEventHandler(async (event) => {
   // Handle JSON body
   const body = await readBody(event)
 
-  // Transform camelCase → PascalCase for PocketBase
   const pbData: Record<string, unknown> = {}
   if (body.title !== undefined) pbData.Title = body.title
   if (body.description !== undefined) pbData.Description = body.description

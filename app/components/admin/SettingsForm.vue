@@ -44,7 +44,7 @@ const state = reactive<Partial<Schema>>({
 })
 
 // ── Ref to image manager ───────────────────────────────────────────────────
-const imageManager = ref<InstanceType<typeof ProjectImageManager> | null>(null)
+const imageManager = ref<{ getFormDataEntries: (formData: FormData) => Promise<void> } | null>(null)
 
 // ── Loading states ─────────────────────────────────────────────────────────
 const submitting = ref(false)

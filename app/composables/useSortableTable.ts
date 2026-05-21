@@ -1,11 +1,45 @@
 import { useSortable } from '@vueuse/integrations/useSortable'
-import type { PortfolioProject } from '#shared/types/pocketbase-types'
 
-export function useSortableTable(
-  data: Ref<PortfolioProject[] | undefined>,
-  savedOrder: Ref<string[] | undefined>,
+interface UseSortableTableOptions<T extends { id: string }> {
+  /** The reactive data array to sort */
+  data: Ref<T[] | undefined>
+  /** The saved order (array of IDs) to restore on load */
+  savedOrder: Ref<string[] | undefined>
+  /** Called after a drag-and-drop reorder with the new ID order */
   persistOrder: (orderedIds: string[]) => Promise<void>
-) {
+  /** CSS selector for the sortable container — must match the class on your <tbody> */
+  selector: string
+  /** Sortable.js animation duration in ms (default: 150) */
+  animation?: number
+  /** Delay after drop before persisting, in ms (default: 300) */
+  persistDelay?: number
+}
+
+/**
+ * Initializes drag-and-drop sorting on a table once data is available.
+ *
+ * On mount, watches `data` and `savedOrder` until data arrives, then:
+ *   1. Reorders data in-place to match the saved order
+ *   2. Attaches Sortable.js to the target element via CSS selector
+ *
+ * After each drag-and-drop, calls `persistOrder` with the new ID sequence.
+ * Runs only once — the watcher is stopped after initialization.
+ */
+export function useSortableTable<T extends { id: string }>(options: UseSortableTableOptions<T>) {
+  const {
+    data,
+    savedOrder,
+    persistOrder,
+    selector,
+    animation = 150,
+    persistDelay = 300
+  } = options
+
+  // DEFERRED INITIALIZATION
+  // Because useLazyFetch is async (server: false), data arrives after mount.
+  // We watch both data sources and only proceed once portfolio data is ready.
+  // stopWatch() ensures this only runs ONCE — multiple useSortable instances
+  // on the same element cause chaotic behavior (duplicate drag handlers, ghost elements).
   onMounted(() => {
     const stopWatch = watch(
       [() => data.value?.length, () => savedOrder.value?.length],
@@ -31,18 +65,19 @@ export function useSortableTable(
           }
 
           // ATTACH SORTABLE: Wait one tick so Vue flushes the reordered rows to the DOM.
-          // useSortable targets .sortable-tbody (the <tbody> class set via :ui prop on UTable).
+          // useSortable targets the selector (e.g. '.portfolio-sortable-tbody') which is
+          // the <tbody> class set via :ui prop on UTable.
           // It attaches Sortable.js which handles drag-and-drop and splices data.value on reorder.
           nextTick(() => {
-            useSortable('.sortable-tbody', data as Ref<PortfolioProject[]>, {
-              animation: 150,
+            useSortable(selector, data as Ref<T[]>, {
+              animation,
               onEnd: () => {
-                // 300ms delay ensures the 150ms animation finishes and useSortable
+                // Delay ensures the animation finishes and useSortable
                 // has completed splicing data.value to match the new visual order
                 setTimeout(() => {
-                  const orderedIds = data.value?.map(project => project.id) ?? []
+                  const orderedIds = data.value?.map(item => item.id) ?? []
                   persistOrder(orderedIds)
-                }, 300)
+                }, persistDelay)
               }
             })
           })

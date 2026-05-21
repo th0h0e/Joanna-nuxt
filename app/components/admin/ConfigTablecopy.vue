@@ -7,7 +7,12 @@ const UButton = resolveComponent('UButton')
 
 const { data, status, refresh, savedOrder, getThumbnail, getImageUrl, persistOrder } = usePortfolioData()
 
-useSortableTable(data, savedOrder, persistOrder)
+useSortableTable({
+  data,
+  savedOrder,
+  persistOrder,
+  selector: '.portfolio-sortable-tbody'
+})
 
 const columns: TableColumn<PortfolioProject>[] = [
   {
@@ -91,14 +96,47 @@ const openSettings = (project: PortfolioProject) => {
   drawerOpen.value = true
 }
 
-const onFormSuccess = () => {
+const onFormSuccess = async () => {
   drawerOpen.value = false
-  refresh()
+  await refresh()
+
+  // Re-sort to maintain the drag-and-drop order (refresh returns PocketBase's default order)
+  const order = savedOrder.value ?? []
+  if (order.length > 0 && data.value) {
+    const sorted = [...data.value].sort((a, b) => {
+      const indexA = order.indexOf(a.id)
+      const indexB = order.indexOf(b.id)
+      if (indexA === -1 && indexB === -1) return 0
+      if (indexA === -1) return 1
+      if (indexB === -1) return -1
+      return indexA - indexB
+    })
+    data.value = sorted
+  }
+
+  // Sync selectedProject with fresh data
+  if (selectedProject.value) {
+    const updated = data.value?.find(p => p.id === selectedProject.value!.id)
+    if (updated) selectedProject.value = updated
+  }
 }
 
-const onDeleteSuccess = () => {
+const onDeleteSuccess = async () => {
   drawerOpen.value = false
-  refresh()
+  await refresh()
+
+  const order = savedOrder.value ?? []
+  if (order.length > 0 && data.value) {
+    const sorted = [...data.value].sort((a, b) => {
+      const indexA = order.indexOf(a.id)
+      const indexB = order.indexOf(b.id)
+      if (indexA === -1 && indexB === -1) return 0
+      if (indexA === -1) return 1
+      if (indexB === -1) return -1
+      return indexA - indexB
+    })
+    data.value = sorted
+  }
 }
 </script>
 
@@ -110,7 +148,7 @@ const onDeleteSuccess = () => {
     :columns="columns"
     :loading="status === 'pending' || status === 'idle'"
     :ui="{
-      tbody: 'sortable-tbody',
+      tbody: 'portfolio-sortable-tbody',
       tr: 'data-[expanded=true]:bg-elevated/50'
     }"
     class="flex-1"
@@ -124,7 +162,7 @@ const onDeleteSuccess = () => {
           :alt="row.original.title"
           loading="lazy"
           class="h-32 w-auto shrink-0 object-cover rounded"
-        />
+        >
       </div>
       <div v-else class="p-4 text-sm text-dimmed">
         No images
