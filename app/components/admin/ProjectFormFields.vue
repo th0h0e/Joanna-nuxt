@@ -5,7 +5,7 @@ const props = defineProps<{
     description?: string
     responsibility?: string[]
   }
-  submitting: boolean
+
 }>()
 
 const emit = defineEmits<{
@@ -45,7 +45,4 @@ function updateField<K extends keyof typeof props.state>(key: K, value: (typeof 
     />
   </UFormField>
 
-  <UButton type="submit" block :loading="submitting">
-    Save Changes
-  </UButton>
 </template>

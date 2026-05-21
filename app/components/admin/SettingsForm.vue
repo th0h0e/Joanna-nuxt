@@ -109,7 +109,6 @@ async function onDelete() {
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <ProjectFormFields
         :state="state"
-        :submitting="submitting"
         @update:state="Object.assign(state, $event)"
       />
 
@@ -118,6 +117,10 @@ async function onDelete() {
         :project-id="project.id"
         :images="project.images"
       />
+
+      <UButton type="submit" block :loading="submitting">
+        Save Changes
+      </UButton>
     </UForm>
 
     <!-- Divider -->
