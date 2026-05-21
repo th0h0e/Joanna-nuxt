@@ -8,13 +8,17 @@ const UButton = resolveComponent('UButton')
 
 const { pocketbaseUrl } = useRuntimeConfig().public
 
-// Fetch portfolio projects (client-only, no SSR)
+// Fetch portfolio projects from PocketBase (client-only, no SSR).
+// Returns rows in PocketBase's default order (creation date / ID),
+// NOT in our custom sort order — we fix that below in onMounted.
 const { data, status, refresh } = useLazyFetch<PortfolioProject[]>('/api/portfolio', {
   key: 'portfolio-admin',
   transform: (data) => data ?? [],
   server: false
 })
 
+// Fetch the saved display order from our KV storage.
+// This is an array of project IDs in the order the admin dragged them into.
 const { data: savedOrder } = useLazyFetch<string[]>('/api/tableOrder', {
   key: 'table-order-admin',
   default: () => [],
@@ -103,18 +107,27 @@ const columns: TableColumn<PortfolioProject>[] = [
   }
 ]
 
-// Wait for both fetches to complete, then sort and attach sortable
+// DEFERRED INITIALIZATION
+// Because useLazyFetch is async (server: false), data arrives after mount.
+// We watch both data sources and only proceed once portfolio data is ready.
+// stopWatch() ensures this only runs ONCE — multiple useSortable instances
+// on the same element cause chaotic behavior (duplicate drag handlers, ghost elements).
 onMounted(() => {
   const stopWatch = watch(
     [() => data.value?.length, () => savedOrder.value?.length],
     ([dataLen, orderLen]) => {
       if (dataLen && dataLen > 0) {
-        // Apply saved order on initial load
+        // REORDER: PocketBase returns projects in creation order, not our custom order.
+        // We sort data.value IN PLACE to match the saved order from KV storage.
+        // This must mutate data.value directly (not use a computed) because:
+        //   - useSortable needs a writable ref to splice when the user drags rows
+        //   - computed properties are read-only — Sortable.js silently fails to update them
         if (orderLen && orderLen > 0) {
           const order = savedOrder.value ?? []
           const sorted = [...(data.value ?? [])].sort((a, b) => {
             const indexA = order.indexOf(a.id)
             const indexB = order.indexOf(b.id)
+            // Projects not in the saved order (e.g. newly added) fall to the bottom
             if (indexA === -1 && indexB === -1) return 0
             if (indexA === -1) return 1
             if (indexB === -1) return -1
@@ -123,10 +136,15 @@ onMounted(() => {
           data.value = sorted
         }
 
+        // ATTACH SORTABLE: Wait one more tick so Vue flushes the reordered rows to the DOM.
+        // useSortable targets .sortable-tbody (the <tbody> class set via :ui prop on UTable).
+        // It attaches Sortable.js which handles drag-and-drop and splices data.value on reorder.
         nextTick(() => {
           useSortable('.sortable-tbody', data as Ref<PortfolioProject[]>, {
             animation: 150,
             onEnd: () => {
+              // 200ms delay ensures the 150ms animation finishes and useSortable
+              // has completed splicing data.value to match the new visual order
               setTimeout(() => {
                 const orderedIds = data.value?.map(project => project.id) ?? []
                 persistOrder(orderedIds)
@@ -142,7 +160,6 @@ onMounted(() => {
 })
 
 async function persistOrder(orderedIds: string[]) {
-  console.log('persistOrder called with:', orderedIds)
   try {
     await $fetch('/api/tableOrder', {
       method: 'POST',
