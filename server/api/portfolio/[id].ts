@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
       Title: string
       Description: string
       Images: string[]
-      Order: number
       Responsibility_json: unknown
       created: string
       updated: string
@@ -36,7 +35,6 @@ export default defineEventHandler(async (event) => {
       title: item.Title,
       description: item.Description,
       images: item.Images,
-      order: item.Order,
       responsibility: item.Responsibility_json,
       created: item.created,
       updated: item.updated
@@ -63,11 +61,10 @@ export default defineEventHandler(async (event) => {
             = fieldName === 'title' ? 'Title'
               : fieldName === 'description' ? 'Description'
                 : fieldName === 'responsibility' ? 'Responsibility_json'
-                  : fieldName === 'order' ? 'Order'
-                    : fieldName === 'images_add' ? 'Images+'
-                      : fieldName === 'images_remove' ? 'Images-'
-                        : fieldName === 'images' ? 'Images'
-                          : fieldName
+                  : fieldName === 'images_add' ? 'Images+'
+                    : fieldName === 'images_remove' ? 'Images-'
+                      : fieldName === 'images' ? 'Images'
+                        : fieldName
 
           if (part.filename && part.type) {
             // File part — forward as Blob
@@ -85,7 +82,6 @@ export default defineEventHandler(async (event) => {
       if (body.title !== undefined) formData.append('Title', body.title)
       if (body.description !== undefined) formData.append('Description', body.description)
       if (body.responsibility !== undefined) formData.append('Responsibility_json', body.responsibility)
-      if (body.order !== undefined) formData.append('Order', String(body.order))
     }
 
     const response = await fetch(
@@ -101,9 +97,6 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: response.status, statusMessage: error.message || 'Update failed' })
     }
 
-    // Invalidate cache after mutation
-    await $fetch('/api/portfolio/invalidate', { method: 'POST' })
-
     return { success: true }
   }
 
@@ -118,9 +111,6 @@ export default defineEventHandler(async (event) => {
       const error = await response.json()
       throw createError({ statusCode: response.status, statusMessage: error.message || 'Delete failed' })
     }
-
-    // Invalidate cache after mutation
-    await $fetch('/api/portfolio/invalidate', { method: 'POST' })
 
     sendNoContent(event)
     return

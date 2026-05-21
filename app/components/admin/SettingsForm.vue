@@ -213,7 +213,7 @@ async function onDelete() {
               :alt="image"
               class="h-20 w-28 object-cover rounded border"
               :class="removedImages.has(image) ? 'opacity-30 grayscale' : ''"
-            />
+            >
             <UButton
               size="xs"
               :color="removedImages.has(image) ? 'success' : 'error'"

@@ -295,7 +295,6 @@ export type PortfolioProject = {
   title: string
   description: string
   images: string[]
-  order: number
   responsibility: unknown
   created: string
   updated: string

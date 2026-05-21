@@ -1,16 +1,36 @@
 <script setup lang="ts">
 import type { PortfolioProject } from '#shared/types/pocketbase-types'
 
-// Fetch portfolio projects from server
-const { data: projects } = await useFetch<PortfolioProject[]>(
-  "/api/portfolio",
-  {
-    key: "portfolio",
-  },
-);
+// Fetch portfolio projects from PocketBase
+const { data: projects } = await useFetch<PortfolioProject[]>("/api/portfolio", {
+  key: "portfolio",
+});
 
-// Extract project titles for the index section
-const projectTitles = computed(() => projects.value?.map((p) => p.title) ?? []);
+// Fetch the saved order from our KV storage
+const { data: savedOrder } = await useFetch<string[]>('/api/tableOrder', {
+  key: 'table-order',
+  default: () => []
+})
+
+// Sort projects to match the saved order
+const sortedProjects = computed(() => {
+  const projectsList = projects.value ?? []
+  const order = savedOrder.value ?? []
+
+  if (order.length === 0) return projectsList
+
+  return [...projectsList].sort((a, b) => {
+    const indexA = order.indexOf(a.id)
+    const indexB = order.indexOf(b.id)
+    // Projects not in the order array go to the end
+    if (indexA === -1 && indexB === -1) return 0
+    if (indexA === -1) return 1
+    if (indexB === -1) return -1
+    return indexA - indexB
+  })
+})
+
+const projectTitles = computed(() => (projects.value ?? []).map((p) => p.title));
 
 const { pocketbaseUrl } = useRuntimeConfig().public;
 
@@ -22,8 +42,6 @@ const getProjectImages = (project: PortfolioProject) => {
       `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${image}?thumb=1200x800`,
   );
 };
-
-
 </script>
 
 <template>
@@ -34,7 +52,7 @@ const getProjectImages = (project: PortfolioProject) => {
       <IndexHero />
     </div>
 
-    <div v-for="project in projects" :key="project.id" class="snap-point">
+    <div v-for="project in sortedProjects" :key="project.id" class="snap-point">
       <a :id="`project-${project.title.replace(/\s+/g, '-').toLowerCase()}`"/>
       <CarouselDesktop
         :images="getProjectImages(project)"

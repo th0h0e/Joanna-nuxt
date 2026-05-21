@@ -43,6 +43,15 @@ export default defineNuxtConfig({
     port: 3002
   },
 
+  nitro: {
+    storage: {
+      portfolioOrder: {
+        driver: 'fs',
+        base: '.data/portfolio-order'
+      }
+    }
+  },
+  
   compatibilityDate: "2026-03-27",
 
   eslint: {

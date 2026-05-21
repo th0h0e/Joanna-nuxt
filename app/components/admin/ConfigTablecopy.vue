@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, resolveComponent, type Ref } from 'vue'
+import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import type { PortfolioProject } from '#shared/types/pocketbase-types'
@@ -14,6 +14,13 @@ const { data, status, refresh } = useLazyFetch<PortfolioProject[]>('/api/portfol
   transform: (data) => data ?? [],
   server: false
 })
+
+const { data: savedOrder } = useLazyFetch<string[]>('/api/tableOrder', {
+  key: 'table-order-admin',
+  default: () => [],
+  server: false
+})
+
 
 const getThumbnail = (project: PortfolioProject) => {
   if (!project.images || project.images.length === 0) return null
@@ -96,16 +103,58 @@ const columns: TableColumn<PortfolioProject>[] = [
   }
 ]
 
-// Defer useSortable until the table DOM element is mounted
-const table = useTemplateRef('table')
+// Wait for both fetches to complete, then sort and attach sortable
+onMounted(() => {
+  const stopWatch = watch(
+    [() => data.value?.length, () => savedOrder.value?.length],
+    ([dataLen, orderLen]) => {
+      if (dataLen && dataLen > 0) {
+        // Apply saved order on initial load
+        if (orderLen && orderLen > 0) {
+          const order = savedOrder.value ?? []
+          const sorted = [...(data.value ?? [])].sort((a, b) => {
+            const indexA = order.indexOf(a.id)
+            const indexB = order.indexOf(b.id)
+            if (indexA === -1 && indexB === -1) return 0
+            if (indexA === -1) return 1
+            if (indexB === -1) return -1
+            return indexA - indexB
+          })
+          data.value = sorted
+        }
 
-watch(() => table.value, (el) => {
-  if (el) {
-    useSortable('.sortable-tbody', data as Ref<PortfolioProject[]>, {
-      animation: 150
-    })
-  }
+        nextTick(() => {
+          useSortable('.sortable-tbody', data as Ref<PortfolioProject[]>, {
+            animation: 150,
+            onEnd: () => {
+              setTimeout(() => {
+                const orderedIds = data.value?.map(project => project.id) ?? []
+                persistOrder(orderedIds)
+              }, 200)
+            }
+          })
+        })
+        stopWatch()
+      }
+    },
+    { immediate: true }
+  )
 })
+
+async function persistOrder(orderedIds: string[]) {
+  console.log('persistOrder called with:', orderedIds)
+  try {
+    await $fetch('/api/tableOrder', {
+      method: 'POST',
+      body: { orderedIds }
+    })
+    useToast().add({ title: 'Order saved', color: 'success' })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    useToast().add({ title: 'Failed to save order', description: message, color: 'error' })
+    refresh()
+  }
+}
 
 const expanded = ref<Record<string, boolean>>({})
 

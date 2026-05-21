@@ -13,11 +13,10 @@ definePageMeta({
         <h1 class="text-3xl font-bold mb-2">
           Portfolio Admin Dashboard
         </h1>
-        <p class="text-gray-600 dark:text-gray-400">
+        <p>
           Manage your portfolio projects and content
         </p>
       </div>
-      <RefreshButton cache-key="portfolio" invalidate-url="/api/portfolio/invalidate" />
     </div>
 
     <!-- Projects Table -->
@@ -27,7 +26,7 @@ definePageMeta({
           All Projects
         </h2>
       </div>
-      <ConfigTable />
+      <ConfigTablecopy />
     </div>
 
   </div>

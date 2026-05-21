@@ -22,9 +22,8 @@ export default defineEventHandler(async (event) => {
           = fieldName === 'title' ? 'Title'
             : fieldName === 'description' ? 'Description'
               : fieldName === 'responsibility' ? 'Responsibility_json'
-                : fieldName === 'order' ? 'Order'
-                  : fieldName === 'images' ? 'Images'
-                    : fieldName
+                : fieldName === 'images' ? 'Images'
+                  : fieldName
 
         if (part.filename && part.type) {
           formData.append(pbFieldName, new Blob([part.data], { type: part.type }), part.filename)
@@ -47,9 +46,6 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: response.status, statusMessage: error.message || 'Create failed' })
     }
 
-    // Invalidate cache after mutation
-    await $fetch('/api/portfolio/invalidate', { method: 'POST' })
-
     const item = await response.json()
     return { success: true, id: item.id }
   }
@@ -62,7 +58,6 @@ export default defineEventHandler(async (event) => {
   if (body.title !== undefined) pbData.Title = body.title
   if (body.description !== undefined) pbData.Description = body.description
   if (body.responsibility !== undefined) pbData.Responsibility_json = body.responsibility
-  if (body.order !== undefined) pbData.Order = body.order
 
   const response = await fetch(
     `${pocketbaseUrl}/api/collections/Portfolio_Projects/records`,
@@ -77,9 +72,6 @@ export default defineEventHandler(async (event) => {
     const error = await response.json()
     throw createError({ statusCode: response.status, statusMessage: error.message || 'Create failed' })
   }
-
-  // Invalidate cache after mutation
-  await $fetch('/api/portfolio/invalidate', { method: 'POST' })
 
   const item = await response.json()
   return { success: true, id: item.id }
