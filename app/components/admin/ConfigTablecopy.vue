@@ -143,12 +143,12 @@ onMounted(() => {
           useSortable('.sortable-tbody', data as Ref<PortfolioProject[]>, {
             animation: 150,
             onEnd: () => {
-              // 200ms delay ensures the 150ms animation finishes and useSortable
+              // 300ms delay ensures the 150ms animation finishes and useSortable
               // has completed splicing data.value to match the new visual order
               setTimeout(() => {
                 const orderedIds = data.value?.map(project => project.id) ?? []
                 persistOrder(orderedIds)
-              }, 200)
+              }, 300)
             }
           })
         })
