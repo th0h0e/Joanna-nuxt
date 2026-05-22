@@ -33,7 +33,6 @@ async function onDelete() {
 
 <template>
   <div class="space-y-3">
-    <p class="text-sm font-medium text-error">Danger Zone</p>
 
     <template v-if="!showDeleteConfirm">
       <UButton
@@ -49,7 +48,7 @@ async function onDelete() {
 
     <template v-else>
       <p class="text-sm text-dimmed">
-        This will permanently delete <strong>{{ projectTitle }}</strong>. This action cannot be undone.
+        This will permanently delete <strong>{{ projectTitle }}</strong>.
       </p>
       <div class="flex gap-2">
         <UButton

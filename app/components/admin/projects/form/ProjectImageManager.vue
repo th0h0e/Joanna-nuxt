@@ -6,52 +6,6 @@ const props = defineProps<{
 
 const { pocketbaseUrl } = useRuntimeConfig().public
 
-// ── Image compression helper ──────────────────────────────────────────────
-async function compressImage(file: File, maxSizeKB = 140): Promise<File> {
-  const MAX_BYTES = maxSizeKB * 1024
-  if (file.size <= MAX_BYTES) return file
-
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      let { width, height } = img
-
-      const scale = Math.sqrt(MAX_BYTES / file.size) * 0.85
-      width = Math.round(width * scale)
-      height = Math.round(height * scale)
-
-      canvas.width = width
-      canvas.height = height
-
-      const ctx = canvas.getContext('2d')!
-      ctx.drawImage(img, 0, 0, width, height)
-
-      const tryCompress = (quality: number): void => {
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              reject(new Error(`Failed to compress ${file.name}`))
-              return
-            }
-            if (blob.size <= MAX_BYTES || quality <= 0.1) {
-              resolve(new File([blob], file.name, { type: 'image/jpeg' }))
-            } else {
-              tryCompress(quality - 0.1)
-            }
-          },
-          'image/jpeg',
-          quality
-        )
-      }
-
-      tryCompress(0.8)
-    }
-    img.onerror = () => reject(new Error(`Failed to load ${file.name}`))
-    img.src = URL.createObjectURL(file)
-  })
-}
-
 // ── State ──────────────────────────────────────────────────────────────────
 const newImages = ref<File[]>([])
 const existingImages = ref<string[]>([...props.images])
@@ -90,10 +44,10 @@ async function getFormDataEntries(formData: FormData) {
     formData.append('images_remove', JSON.stringify([...removedImages.value]))
   }
 
-  // Append new (compressed) images
-  for (const file of newImages.value) {
-    const compressed = await compressImage(file)
-    formData.append('images_add', compressed)
+  // Append new (compressed) images in parallel
+  const compressed = await Promise.all(newImages.value.map(file => compressImage(file)))
+  for (const file of compressed) {
+    formData.append('images_add', file)
   }
 }
 
