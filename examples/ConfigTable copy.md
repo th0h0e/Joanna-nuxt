@@ -185,10 +185,12 @@ const onDeleteSuccess = async () => {
     </template>
   </UTable>
 
-  <UDrawer
-    v-model:open="drawerOpen"
-    :title="selectedProject?.title ?? 'Project Settings'"
-  >
+<UDrawer
+v-model:open="drawerOpen"
+:title="selectedProject?.title ?? 'Project Settings'"
+
+>
+
     <template #body>
       <ProjectForm
         v-if="selectedProject"
@@ -197,5 +199,6 @@ const onDeleteSuccess = async () => {
         @deleted="onDeleteSuccess"
       />
     </template>
+
   </UDrawer>
 </template>

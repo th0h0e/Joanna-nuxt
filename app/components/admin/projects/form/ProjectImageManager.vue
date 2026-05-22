@@ -71,7 +71,7 @@ defineExpose({ getFormDataEntries })
           :alt="image"
           class="h-20 w-28 rounded border object-cover"
           :class="removedImages.has(image) ? 'opacity-30 grayscale' : ''"
-        >
+        />
         <UButton
           size="xs"
           :color="removedImages.has(image) ? 'success' : 'error'"
