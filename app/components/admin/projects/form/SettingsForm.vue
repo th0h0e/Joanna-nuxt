@@ -46,9 +46,8 @@ const state = reactive<Partial<Schema>>({
 // ── Ref to image manager ───────────────────────────────────────────────────
 const imageManager = ref<{ getFormDataEntries: (formData: FormData) => Promise<void> } | null>(null)
 
-// ── Loading states ─────────────────────────────────────────────────────────
+// ── Loading state ──────────────────────────────────────────────────────────
 const submitting = ref(false)
-const deleting = ref(false)
 
 // ── Submit (update) ────────────────────────────────────────────────────────
 async function onSubmit(_event: FormSubmitEvent<Schema>) {
@@ -82,35 +81,35 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
     submitting.value = false
   }
 }
-
-// ── Delete ─────────────────────────────────────────────────────────────────
-async function onDelete() {
-  deleting.value = true
-
-  try {
-    await $fetch(`/api/portfolio/${props.project.id}`, {
-      method: 'DELETE'
-    })
-
-    toast.add({ title: 'Project deleted', color: 'success' })
-    emit('deleted')
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to delete project'
-    toast.add({ title: 'Delete failed', description: message, color: 'error' })
-  } finally {
-    deleting.value = false
-  }
-}
 </script>
 
 <template>
   <div class="space-y-6 p-4">
     <!-- Update Form -->
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-      <ProjectFormFields
-        :state="state"
-        @update:state="Object.assign(state, $event)"
-      />
+      <UFormField label="Title" name="title" required>
+        <UInput
+          v-model="state.title"
+          placeholder="Project title"
+        />
+      </UFormField>
+
+      <UFormField label="Description" name="description" required>
+        <UTextarea
+          v-model="state.description"
+          :rows="4"
+          placeholder="Project description"
+          autoresize
+          :maxrows="8"
+        />
+      </UFormField>
+
+      <UFormField label="Responsibilities" name="responsibility">
+        <UInputTags
+          v-model="state.responsibility"
+          placeholder="Add a responsibility..."
+        />
+      </UFormField>
 
       <ProjectImageManager
         ref="imageManager"
@@ -123,14 +122,11 @@ async function onDelete() {
       </UButton>
     </UForm>
 
-    <!-- Divider -->
-    <USeparator />
-
     <!-- Danger Zone -->
     <ProjectDeleteZone
+      :project-id="project.id"
       :project-title="project.title"
-      :deleting="deleting"
-      @delete="onDelete"
+      @deleted="emit('deleted')"
     />
   </div>
 </template>

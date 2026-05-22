@@ -26,7 +26,7 @@ definePageMeta({
           All Projects
         </h2>
       </div>
-      <ConfigTablecopy />
+      <ConfigTable />
     </div>
 
   </div>

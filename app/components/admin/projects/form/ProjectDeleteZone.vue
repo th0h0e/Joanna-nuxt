@@ -1,14 +1,34 @@
 <script setup lang="ts">
 defineProps<{
+  projectId: string
   projectTitle: string
-  deleting: boolean
 }>()
 
 const emit = defineEmits<{
-  delete: []
+  deleted: []
 }>()
 
+const toast = useToast()
 const showDeleteConfirm = ref(false)
+const deleting = ref(false)
+
+async function onDelete() {
+  deleting.value = true
+
+  try {
+    await $fetch(`/api/portfolio/${projectId}`, {
+      method: 'DELETE'
+    })
+
+    toast.add({ title: 'Project deleted', color: 'success' })
+    emit('deleted')
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Failed to delete project'
+    toast.add({ title: 'Delete failed', description: message, color: 'error' })
+  } finally {
+    deleting.value = false
+  }
+}
 </script>
 
 <template>
@@ -35,7 +55,7 @@ const showDeleteConfirm = ref(false)
         <UButton
           color="error"
           :loading="deleting"
-          @click="emit('delete')"
+          @click="onDelete"
         >
           Confirm Delete
         </UButton>
