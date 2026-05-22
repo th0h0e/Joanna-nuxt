@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
 
@@ -25,12 +25,17 @@ export default defineEventHandler(async (event) => {
           continue
         }
 
-        const pbFieldName
-          = fieldName === 'title' ? 'Title'
-            : fieldName === 'description' ? 'Description'
-              : fieldName === 'responsibility' ? 'Responsibility_json'
-                : fieldName === 'images_add' ? 'Images+'
-                  : fieldName === 'images' ? 'Images'
+        const pbFieldName =
+          fieldName === 'title'
+            ? 'Title'
+            : fieldName === 'description'
+              ? 'Description'
+              : fieldName === 'responsibility'
+                ? 'Responsibility_json'
+                : fieldName === 'images_add'
+                  ? 'Images+'
+                  : fieldName === 'images'
+                    ? 'Images'
                     : fieldName
 
         if (part.filename && part.type) {
@@ -45,7 +50,8 @@ export default defineEventHandler(async (event) => {
 
     if (body.title !== undefined) formData.append('Title', body.title)
     if (body.description !== undefined) formData.append('Description', body.description)
-    if (body.responsibility !== undefined) formData.append('Responsibility_json', body.responsibility)
+    if (body.responsibility !== undefined)
+      formData.append('Responsibility_json', body.responsibility)
   }
 
   const response = await fetch(
@@ -58,7 +64,10 @@ export default defineEventHandler(async (event) => {
 
   if (!response.ok) {
     const error = await response.json()
-    throw createError({ statusCode: response.status, statusMessage: error.message || 'Update failed' })
+    throw createError({
+      statusCode: response.status,
+      statusMessage: error.message || 'Update failed'
+    })
   }
 
   return { success: true }

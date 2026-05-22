@@ -14,9 +14,12 @@ const drawerOpen = defineModel<boolean>('open', { default: false })
 </script>
 
 <template>
-  <UDrawer v-model:open="drawerOpen" :title="project?.title ?? 'Project Settings'">
+  <UDrawer
+    v-model:open="drawerOpen"
+    :title="project?.title ?? 'Project Settings'"
+  >
     <template #body>
-      <SettingsForm
+      <ProjectForm
         v-if="project"
         :project="project"
         @success="emit('success')"

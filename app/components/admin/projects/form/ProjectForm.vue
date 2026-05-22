@@ -14,19 +14,6 @@ const emit = defineEmits<{
 
 const toast = useToast()
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-function parseResponsibility(value: unknown): string[] {
-  if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string')
-  if (typeof value === 'string') {
-    try {
-      const parsed = JSON.parse(value)
-      if (Array.isArray(parsed)) return parsed.filter((v): v is string => typeof v === 'string')
-    } catch { /* not JSON, treat as single tag */ }
-    return value ? [value] : []
-  }
-  return []
-}
-
 // ── Schema ────────────────────────────────────────────────────────────────
 const schema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title is too long'),
@@ -34,13 +21,14 @@ const schema = z.object({
   responsibility: z.array(z.string()).optional().default([])
 })
 
+//Let types refer to zod schema above
 type Schema = z.output<typeof schema>
 
-// ── State ──────────────────────────────────────────────────────────────────
+// ── Reactive State ──────────────────────────────────────────────────────────────────
 const state = reactive<Partial<Schema>>({
   title: props.project.title,
   description: props.project.description,
-  responsibility: parseResponsibility(props.project.responsibility)
+  responsibility: props.project.responsibility ?? []
 })
 
 // ── Ref to image manager ───────────────────────────────────────────────────
@@ -85,29 +73,44 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
 
 <template>
   <div class="space-y-6 p-4">
-    <!-- Update Form -->
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-      <UFormField label="Title" name="title" required>
+    <UForm
+      :schema="schema"
+      :state="state"
+      class="space-y-4"
+      @submit="onSubmit"
+    >
+      <UFormField
+        label="Title"
+        name="title"
+        required
+      >
         <UInput
           v-model="state.title"
           placeholder="Project title"
         />
       </UFormField>
 
-      <UFormField label="Description" name="description" required>
+      <UFormField
+        label="Description"
+        name="description"
+        required
+      >
         <UTextarea
           v-model="state.description"
-          :rows="4"
+          :rows="6"
           placeholder="Project description"
           autoresize
-          :maxrows="8"
+          :maxrows="10"
         />
       </UFormField>
 
-      <UFormField label="Responsibilities" name="responsibility">
+      <UFormField
+        label="Responsibilities"
+        name="responsibility"
+      >
         <UInputTags
           v-model="state.responsibility"
-          placeholder="Add a responsibility..."
+          placeholder="Add your responsibility..."
         />
       </UFormField>
 
@@ -117,12 +120,15 @@ async function onSubmit(_event: FormSubmitEvent<Schema>) {
         :images="project.images"
       />
 
-      <UButton type="submit" block :loading="submitting">
+      <UButton
+        type="submit"
+        block
+        :loading="submitting"
+      >
         Save Changes
       </UButton>
     </UForm>
 
-    <!-- Danger Zone -->
     <ProjectDeleteZone
       :project-id="project.id"
       :project-title="project.title"

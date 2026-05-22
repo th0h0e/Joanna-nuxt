@@ -1,8 +1,8 @@
 <script setup lang="ts">
-defineProps<{
-  projectId: string
-  projectTitle: string
-}>()
+const props = defineProps<{
+    projectId: string
+    projectTitle: string
+  }>()
 
 const emit = defineEmits<{
   deleted: []
@@ -16,7 +16,7 @@ async function onDelete() {
   deleting.value = true
 
   try {
-    await $fetch(`/api/portfolio/${projectId}`, {
+    await $fetch(`/api/portfolio/${props.projectId}`, {
       method: 'DELETE'
     })
 
@@ -33,7 +33,6 @@ async function onDelete() {
 
 <template>
   <div class="space-y-3">
-
     <template v-if="!showDeleteConfirm">
       <UButton
         color="error"
@@ -47,8 +46,9 @@ async function onDelete() {
     </template>
 
     <template v-else>
-      <p class="text-sm text-dimmed">
-        This will permanently delete <strong>{{ projectTitle }}</strong>.
+      <p class="text-dimmed text-sm">
+        This will permanently delete <strong>{{ projectTitle }}</strong
+        >.
       </p>
       <div class="flex gap-2">
         <UButton

@@ -1,13 +1,14 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
 
   try {
-    const response = await fetch(
-      `${pocketbaseUrl}/api/collections/About/records`
-    )
+    const response = await fetch(`${pocketbaseUrl}/api/collections/About/records`)
 
     if (!response.ok) {
-      throw createError({ statusCode: response.status, statusMessage: 'Failed to fetch about records' })
+      throw createError({
+        statusCode: response.status,
+        statusMessage: 'Failed to fetch about records'
+      })
     }
 
     const data: {
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
       }>
     } = await response.json()
 
-    return data.items.map((item) => ({
+    return data.items.map(item => ({
       id: item.id,
       aboutDescription: item.About_Description,
       clientListJson: item.Client_List_Json,

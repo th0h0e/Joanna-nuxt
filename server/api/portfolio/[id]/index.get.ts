@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
 
@@ -6,9 +6,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Missing project ID' })
   }
 
-  const response = await fetch(
-    `${pocketbaseUrl}/api/collections/Portfolio_Projects/records/${id}`
-  )
+  const response = await fetch(`${pocketbaseUrl}/api/collections/Portfolio_Projects/records/${id}`)
 
   if (!response.ok) {
     throw createError({ statusCode: response.status, statusMessage: 'Project not found' })
@@ -29,7 +27,7 @@ export default defineEventHandler(async (event) => {
     title: item.Title,
     description: item.Description,
     images: item.Images,
-    responsibility: item.Responsibility_json,
+    responsibility: parseResponsibility(item.Responsibility_json),
     created: item.created,
     updated: item.updated
   }

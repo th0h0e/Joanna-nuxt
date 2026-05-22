@@ -5,7 +5,8 @@ import type { PortfolioProject } from '#shared/types/pocketbase-types'
 
 const UButton = resolveComponent('UButton')
 
-const { data, status, refresh, savedOrder, getThumbnail, getImageUrl, persistOrder } = usePortfolioData()
+const { data, status, refresh, savedOrder, getThumbnail, getImageUrl, persistOrder } =
+  usePortfolioData()
 
 useSortableTable({
   data,
@@ -59,7 +60,11 @@ const columns: TableColumn<PortfolioProject>[] = [
     header: 'Description',
     cell: ({ row }) => {
       const desc = row.original.description
-      return h('p', { class: 'text-sm truncate max-w-xs' }, desc && desc.length > 60 ? desc.slice(0, 60) + '…' : desc)
+      return h(
+        'p',
+        { class: 'text-sm truncate max-w-xs' },
+        desc && desc.length > 60 ? desc.slice(0, 60) + '…' : desc
+      )
     }
   },
   {
@@ -69,7 +74,11 @@ const columns: TableColumn<PortfolioProject>[] = [
       const resp = row.original.responsibility
       if (!resp) return h('span', { class: 'text-dimmed text-sm' }, '—')
       const text = typeof resp === 'string' ? resp : JSON.stringify(resp)
-      return h('p', { class: 'text-sm truncate max-w-xs' }, text.length > 60 ? text.slice(0, 60) + '…' : text)
+      return h(
+        'p',
+        { class: 'text-sm truncate max-w-xs' },
+        text.length > 60 ? text.slice(0, 60) + '…' : text
+      )
     }
   },
   {
@@ -154,25 +163,34 @@ const onDeleteSuccess = async () => {
     class="flex-1"
   >
     <template #expanded="{ row }">
-      <div v-if="row.original.images && row.original.images.length" class="flex gap-3 p-4 overflow-x-auto">
+      <div
+        v-if="row.original.images && row.original.images.length"
+        class="flex gap-3 overflow-x-auto p-4"
+      >
         <img
           v-for="image in row.original.images"
           :key="image"
           :src="getImageUrl(row.original, image)"
           :alt="row.original.title"
           loading="lazy"
-          class="h-32 w-auto shrink-0 object-cover rounded"
+          class="h-32 w-auto shrink-0 rounded object-cover"
         >
       </div>
-      <div v-else class="p-4 text-sm text-dimmed">
+      <div
+        v-else
+        class="text-dimmed p-4 text-sm"
+      >
         No images
       </div>
     </template>
   </UTable>
 
-  <UDrawer v-model:open="drawerOpen" :title="selectedProject?.title ?? 'Project Settings'">
+  <UDrawer
+    v-model:open="drawerOpen"
+    :title="selectedProject?.title ?? 'Project Settings'"
+  >
     <template #body>
-      <SettingsForm
+      <ProjectForm
         v-if="selectedProject"
         :project="selectedProject"
         @success="onFormSuccess"

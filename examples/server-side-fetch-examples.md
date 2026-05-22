@@ -1,75 +1,77 @@
-/**
- * Server-side PocketBase Fetch Examples
- * How to use the /api/portfolio endpoint from the client
- *
- * This endpoint uses PocketBase SDK on the server
- */
+/\*\*
 
-/* ============================================
-   EXAMPLE 1: Basic Fetch (Default Sort by Order)
-   ============================================ */
+- Server-side PocketBase Fetch Examples
+- How to use the /api/portfolio endpoint from the client
+-
+- This endpoint uses PocketBase SDK on the server
+  \*/
+
+/_ ============================================
+EXAMPLE 1: Basic Fetch (Default Sort by Order)
+============================================ _/
 
 import { defineHandler } from "nitro";
 import { fetch } from "nitro";
 export const exampleBasicFetch = async () => {
-  const data = await $fetch('/api/portfolio')
-  console.log('Portfolio projects:', data)
-  return data
+const data = await $fetch('/api/portfolio')
+console.log('Portfolio projects:', data)
+return data
 }
 
-/* ============================================
-   EXAMPLE 2: Fetch with Custom Sort
-   ============================================ */
+/_ ============================================
+EXAMPLE 2: Fetch with Custom Sort
+============================================ _/
 export const exampleCustomSort = async () => {
-  // Sort by created date (newest first)
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      sort: '-created'
-    }
-  })
+// Sort by created date (newest first)
+const data = await $fetch('/api/portfolio', {
+query: {
+sort: '-created'
+}
+})
 
-  return data
+return data
 }
 
-/* ============================================
-   EXAMPLE 3: Fetch with Filter
-   ============================================ */
+/_ ============================================
+EXAMPLE 3: Fetch with Filter
+============================================ _/
 export const exampleWithFilter = async () => {
-  // Only get projects with Order > 0
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      filter: 'Order > 0',
-      sort: 'Order'
-    }
-  })
+// Only get projects with Order > 0
+const data = await $fetch('/api/portfolio', {
+query: {
+filter: 'Order > 0',
+sort: 'Order'
+}
+})
 
-  return data
+return data
 }
 
-/* ============================================
-   EXAMPLE 4: Paginated Fetch
-   ============================================ */
+/_ ============================================
+EXAMPLE 4: Paginated Fetch
+============================================ _/
 export const examplePaginated = async () => {
-  // Get page 1 with 5 items per page
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      page: 1,
-      perPage: 5,
-      sort: 'Order'
-    }
-  })
+// Get page 1 with 5 items per page
+const data = await $fetch('/api/portfolio', {
+query: {
+page: 1,
+perPage: 5,
+sort: 'Order'
+}
+})
 
-  console.log('Total items:', data.totalItems)
-  console.log('Total pages:', data.totalPages)
-  console.log('Current page:', data.page)
+console.log('Total items:', data.totalItems)
+console.log('Total pages:', data.totalPages)
+console.log('Current page:', data.page)
 
-  return data
+return data
 }
 
-/* ============================================
-   EXAMPLE 5: In a Component with Loading State
-   ============================================ */
+/_ ============================================
+EXAMPLE 5: In a Component with Loading State
+============================================ _/
 export const exampleComponent = `
+
 <script setup lang="ts">
 const { data, pending, error, refresh } = await useFetch('/api/portfolio', {
   query: {
@@ -92,10 +94,11 @@ const { data, pending, error, refresh } = await useFetch('/api/portfolio', {
 </template>
 `
 
-/* ============================================
-   EXAMPLE 6: Lazy Fetch (Client-side only)
-   ============================================ */
+/_ ============================================
+EXAMPLE 6: Lazy Fetch (Client-side only)
+============================================ _/
 export const exampleLazyFetch = `
+
 <script setup lang="ts">
 const { data, pending, execute } = useLazyFetch('/api/portfolio', {
   server: false, // Only fetch on client
@@ -119,49 +122,50 @@ const loadProjects = () => {
     <div v-if="data">
       {{ data.items.length }} projects loaded
     </div>
+
   </div>
 </template>
 `
 
-/* ============================================
-   EXAMPLE 7: Error Handling
-   ============================================ */
+/_ ============================================
+EXAMPLE 7: Error Handling
+============================================ _/
 export const exampleErrorHandling = async () => {
-  try {
-    const data = await $fetch('/api/portfolio', {
-      query: {
-        sort: 'Order'
-      }
-    })
-    return { success: true, data }
-  }
-  catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Unknown error'
-    const statusCode = typeof (error as { statusCode?: number }).statusCode === 'number'
-      ? (error as { statusCode: number }).statusCode
-      : undefined
-    console.error('Failed to fetch:', error)
-    return {
-      success: false,
-      error: message,
-      statusCode
-    }
-  }
+try {
+const data = await $fetch('/api/portfolio', {
+query: {
+sort: 'Order'
+}
+})
+return { success: true, data }
+}
+catch (error: unknown) {
+const message = error instanceof Error ? error.message : 'Unknown error'
+const statusCode = typeof (error as { statusCode?: number }).statusCode === 'number'
+? (error as { statusCode: number }).statusCode
+: undefined
+console.error('Failed to fetch:', error)
+return {
+success: false,
+error: message,
+statusCode
+}
+}
 }
 
-/* ============================================
-   EXAMPLE 8: Using in a Composable
-   ============================================ */
+/_ ============================================
+EXAMPLE 8: Using in a Composable
+============================================ _/
 export const exampleComposable = `
 // composables/usePortfolioProjects.ts
 export const usePortfolioProjects = () => {
-  const projects = ref([])
-  const loading = ref(false)
-  const error = ref(null)
+const projects = ref([])
+const loading = ref(false)
+const error = ref(null)
 
-  const fetchProjects = async (options = {}) => {
-    loading.value = true
-    error.value = null
+const fetchProjects = async (options = {}) => {
+loading.value = true
+error.value = null
 
     try {
       const data = await $fetch('/api/portfolio', {
@@ -181,14 +185,15 @@ export const usePortfolioProjects = () => {
     finally {
       loading.value = false
     }
-  }
 
-  return {
-    projects,
-    loading,
-    error,
-    fetchProjects
-  }
+}
+
+return {
+projects,
+loading,
+error,
+fetchProjects
+}
 }
 
 // Usage in component:
@@ -196,10 +201,11 @@ const { projects, loading, fetchProjects } = usePortfolioProjects()
 await fetchProjects({ filter: 'Order > 0' })
 `
 
-/* ============================================
-   EXAMPLE 9: Watch Reactive Query Parameters
-   ============================================ */
+/_ ============================================
+EXAMPLE 9: Watch Reactive Query Parameters
+============================================ _/
 export const exampleReactiveQuery = `
+
 <script setup lang="ts">
 const sortBy = ref('Order')
 const filterValue = ref('')
@@ -225,22 +231,23 @@ const { data, pending } = await useFetch('/api/portfolio', {
     <div v-else>
       {{ data?.items?.length }} projects
     </div>
+
   </div>
 </template>
 `
 
-/* ============================================
-   EXAMPLE 10: Multiple Query Parameters
-   ============================================ */
+/_ ============================================
+EXAMPLE 10: Multiple Query Parameters
+============================================ _/
 export const exampleMultipleParams = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      sort: '-created',
-      filter: 'Title != "" && Order > 0',
-      page: 1,
-      perPage: 10
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+sort: '-created',
+filter: 'Title != "" && Order > 0',
+page: 1,
+perPage: 10
+}
+})
 
-  return data
+return data
 }

@@ -40,7 +40,7 @@ export default async function compressImage(file: File, maxSizeKB = 140): Promis
 
       const tryCompress = (quality: number): void => {
         canvas.toBlob(
-          (blob) => {
+          blob => {
             if (!blob) {
               reject(new Error(`Failed to compress ${file.name}`))
               return

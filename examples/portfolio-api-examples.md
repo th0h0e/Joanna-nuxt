@@ -1,228 +1,230 @@
-/**
- * Portfolio API Examples
- * Using /api/portfolio with PocketBase SDK methods
- */
+/\*\*
 
-/* ============================================
-   MODE 1: Paginated List (Default)
-   ============================================ */
+- Portfolio API Examples
+- Using /api/portfolio with PocketBase SDK methods
+  \*/
+
+/_ ============================================
+MODE 1: Paginated List (Default)
+============================================ _/
 export const examplePaginatedList = async () => {
-  // Equivalent to: pb.collection('Portfolio_Projects').getList(1, 50, {...})
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'list', // Optional, this is default
-      page: 1,
-      perPage: 50,
-      sort: 'Order'
-    }
-  })
+// Equivalent to: pb.collection('Portfolio_Projects').getList(1, 50, {...})
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'list', // Optional, this is default
+page: 1,
+perPage: 50,
+sort: 'Order'
+}
+})
 
-  // Response format:
-  // {
-  //   page: 1,
-  //   perPage: 50,
-  //   totalItems: 100,
-  //   totalPages: 2,
-  //   items: [...]
-  // }
+// Response format:
+// {
+// page: 1,
+// perPage: 50,
+// totalItems: 100,
+// totalPages: 2,
+// items: [...]
+// }
 
-  console.log('Total projects:', data.totalItems)
-  console.log('Projects on this page:', data.items.length)
+console.log('Total projects:', data.totalItems)
+console.log('Projects on this page:', data.items.length)
 
-  return data
+return data
 }
 
-/* ============================================
-   MODE 2: Full List (All Records)
-   ============================================ */
+/_ ============================================
+MODE 2: Full List (All Records)
+============================================ _/
 export const exampleFullList = async () => {
-  // Equivalent to: pb.collection('Portfolio_Projects').getFullList({...})
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'full',
-      sort: '-created' // Newest first
-    }
-  })
+// Equivalent to: pb.collection('Portfolio_Projects').getFullList({...})
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'full',
+sort: '-created' // Newest first
+}
+})
 
-  // Response format: [...] (direct array of all records)
-  console.log('Total projects:', data.length)
+// Response format: [...] (direct array of all records)
+console.log('Total projects:', data.length)
 
-  return data
+return data
 }
 
-/* ============================================
-   MODE 3: First Matching Item
-   ============================================ */
+/_ ============================================
+MODE 3: First Matching Item
+============================================ _/
 export const exampleFirstItem = async () => {
-  // Equivalent to: pb.collection('Portfolio_Projects').getFirstListItem('filter', {...})
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'first',
-      filter: 'Order = 1',
-      expand: 'author'
-    }
-  })
+// Equivalent to: pb.collection('Portfolio_Projects').getFirstListItem('filter', {...})
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'first',
+filter: 'Order = 1',
+expand: 'author'
+}
+})
 
-  // Response format: { id, Title, Description, ... } (single record)
-  console.log('First project:', data.Title)
+// Response format: { id, Title, Description, ... } (single record)
+console.log('First project:', data.Title)
 
-  return data
+return data
 }
 
-/* ============================================
-   FILTERING EXAMPLES
-   ============================================ */
+/_ ============================================
+FILTERING EXAMPLES
+============================================ _/
 
 // Filter by title
 export const exampleFilterByTitle = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'list',
-      filter: 'Title ~ "Web"', // Contains "Web"
-      sort: 'Order'
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'list',
+filter: 'Title ~ "Web"', // Contains "Web"
+sort: 'Order'
+}
+})
 
-  return data
+return data
 }
 
 // Filter by order
 export const exampleFilterByOrder = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'full',
-      filter: 'Order > 0 && Order <= 5',
-      sort: 'Order'
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'full',
+filter: 'Order > 0 && Order <= 5',
+sort: 'Order'
+}
+})
 
-  return data
+return data
 }
 
 // Multiple conditions
 export const exampleMultipleFilters = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'list',
-      filter: 'Title != "" && Order > 0',
-      sort: '-created'
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'list',
+filter: 'Title != "" && Order > 0',
+sort: '-created'
+}
+})
 
-  return data
+return data
 }
 
-/* ============================================
-   SORTING EXAMPLES
-   ============================================ */
+/_ ============================================
+SORTING EXAMPLES
+============================================ _/
 
 // Sort ascending
 export const exampleSortAscending = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'full',
-      sort: 'Order' // Ascending
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'full',
+sort: 'Order' // Ascending
+}
+})
 
-  return data
+return data
 }
 
 // Sort descending
 export const exampleSortDescending = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'full',
-      sort: '-created' // Descending (note the minus sign)
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'full',
+sort: '-created' // Descending (note the minus sign)
+}
+})
 
-  return data
+return data
 }
 
 // Multiple sort fields
 export const exampleMultipleSort = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'full',
-      sort: '-created,Order' // First by created DESC, then by Order ASC
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'full',
+sort: '-created,Order' // First by created DESC, then by Order ASC
+}
+})
 
-  return data
+return data
 }
 
-/* ============================================
-   PAGINATION EXAMPLES
-   ============================================ */
+/_ ============================================
+PAGINATION EXAMPLES
+============================================ _/
 
 // First page
 export const exampleFirstPage = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      page: 1,
-      perPage: 10,
-      sort: 'Order'
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+page: 1,
+perPage: 10,
+sort: 'Order'
+}
+})
 
-  return data
+return data
 }
 
 // Specific page
 export const exampleSpecificPage = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      page: 3,
-      perPage: 10,
-      sort: 'Order'
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+page: 3,
+perPage: 10,
+sort: 'Order'
+}
+})
 
-  return data
+return data
 }
 
 // Pagination with total info
 export const examplePaginationInfo = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      page: 1,
-      perPage: 10
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+page: 1,
+perPage: 10
+}
+})
 
-  console.log(`Page ${data.page} of ${data.totalPages}`)
-  console.log(`Showing ${data.items.length} of ${data.totalItems} total items`)
+console.log(`Page ${data.page} of ${data.totalPages}`)
+console.log(`Showing ${data.items.length} of ${data.totalItems} total items`)
 
-  return data
+return data
 }
 
-/* ============================================
-   EXPAND (RELATIONS) EXAMPLES
-   ============================================ */
+/_ ============================================
+EXPAND (RELATIONS) EXAMPLES
+============================================ _/
 
 // Expand related fields
 export const exampleExpand = async () => {
-  const data = await $fetch('/api/portfolio', {
-    query: {
-      mode: 'list',
-      expand: 'author,category', // Expand multiple relations
-      sort: 'Order'
-    }
-  })
+const data = await $fetch('/api/portfolio', {
+query: {
+mode: 'list',
+expand: 'author,category', // Expand multiple relations
+sort: 'Order'
+}
+})
 
-  // Access expanded data
-  // data.items[0].expand.author.name
-  // data.items[0].expand.category.title
+// Access expanded data
+// data.items[0].expand.author.name
+// data.items[0].expand.category.title
 
-  return data
+return data
 }
 
-/* ============================================
-   COMPONENT USAGE EXAMPLES
-   ============================================ */
+/_ ============================================
+COMPONENT USAGE EXAMPLES
+============================================ _/
 
 export const componentExample1 = `
+
 <script setup lang="ts">
 // Simple fetch on button click
 const projects = ref([])
@@ -253,6 +255,7 @@ const fetchProjects = async () => {
 `
 
 export const componentExample2 = `
+
 <script setup lang="ts">
 // With useFetch (SSR + caching)
 const { data, pending, error, refresh } = await useFetch('/api/portfolio', {
@@ -278,6 +281,7 @@ const { data, pending, error, refresh } = await useFetch('/api/portfolio', {
 `
 
 export const componentExample3 = `
+
 <script setup lang="ts">
 // Reactive pagination
 const currentPage = ref(1)
@@ -320,6 +324,7 @@ const prevPage = () => {
         Next
       </button>
     </div>
+
   </div>
 </template>
 `

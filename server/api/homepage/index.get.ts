@@ -1,13 +1,14 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
 
   try {
-    const response = await fetch(
-      `${pocketbaseUrl}/api/collections/Homepage/records`
-    )
+    const response = await fetch(`${pocketbaseUrl}/api/collections/Homepage/records`)
 
     if (!response.ok) {
-      throw createError({ statusCode: response.status, statusMessage: 'Failed to fetch homepage records' })
+      throw createError({
+        statusCode: response.status,
+        statusMessage: 'Failed to fetch homepage records'
+      })
     }
 
     const data = await response.json()

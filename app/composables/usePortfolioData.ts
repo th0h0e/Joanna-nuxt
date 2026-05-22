@@ -9,7 +9,7 @@ export function usePortfolioData() {
   // NOT in our custom sort order — useSortableTable fixes that.
   const { data, status, refresh } = useLazyFetch<PortfolioProject[]>('/api/portfolio', {
     key: 'portfolio-admin',
-    transform: (data) => data ?? [],
+    transform: data => data ?? [],
     server: false
   })
 

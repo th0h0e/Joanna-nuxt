@@ -20,27 +20,25 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+  <div class="flex min-h-screen items-center justify-center bg-gray-50 px-4 dark:bg-gray-900">
     <div class="w-full max-w-md">
       <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold mb-2">
-          Welcome Back
-        </h1>
-        <p class="text-gray-600 dark:text-gray-400">
-          Sign in to your portfolio dashboard
-        </p>
+      <div class="mb-8 text-center">
+        <h1 class="mb-2 text-3xl font-bold">Welcome Back</h1>
+        <p class="text-gray-600 dark:text-gray-400">Sign in to your portfolio dashboard</p>
       </div>
 
       <!-- Login Form -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div
+        class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+      >
         <form
           class="space-y-4"
           @submit.prevent="handleLogin"
         >
           <!-- Email Input -->
           <div>
-            <label class="block text-sm font-medium mb-2">Email Address</label>
+            <label class="mb-2 block text-sm font-medium">Email Address</label>
             <UInput
               v-model="email"
               type="email"
@@ -52,7 +50,7 @@ const handleLogin = async () => {
 
           <!-- Password Input -->
           <div>
-            <label class="block text-sm font-medium mb-2">Password</label>
+            <label class="mb-2 block text-sm font-medium">Password</label>
             <UInput
               v-model="password"
               type="password"
@@ -64,11 +62,11 @@ const handleLogin = async () => {
 
           <!-- Remember Me & Forgot Password -->
           <div class="flex items-center justify-between">
-            <label class="flex items-center gap-2 cursor-pointer">
+            <label class="flex cursor-pointer items-center gap-2">
               <input
                 v-model="rememberMe"
                 type="checkbox"
-                class="w-4 h-4"
+                class="h-4 w-4"
               >
               <span class="text-sm">Remember me</span>
             </label>
@@ -98,7 +96,7 @@ const handleLogin = async () => {
             Don't have an account?
             <NuxtLink
               to="#"
-              class="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
+              class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400"
             >
               Sign up
             </NuxtLink>
@@ -107,7 +105,7 @@ const handleLogin = async () => {
       </div>
 
       <!-- Footer -->
-      <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6">
+      <p class="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
         Protected by reCAPTCHA and subject to the Privacy Policy and Terms of Service.
       </p>
     </div>

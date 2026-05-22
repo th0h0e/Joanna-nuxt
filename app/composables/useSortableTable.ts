@@ -26,14 +26,7 @@ interface UseSortableTableOptions<T extends { id: string }> {
  * Runs only once — the watcher is stopped after initialization.
  */
 export function useSortableTable<T extends { id: string }>(options: UseSortableTableOptions<T>) {
-  const {
-    data,
-    savedOrder,
-    persistOrder,
-    selector,
-    animation = 150,
-    persistDelay = 300
-  } = options
+  const { data, savedOrder, persistOrder, selector, animation = 150, persistDelay = 300 } = options
 
   // DEFERRED INITIALIZATION
   // Because useLazyFetch is async (server: false), data arrives after mount.

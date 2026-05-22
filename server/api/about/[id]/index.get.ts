@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
 
@@ -7,9 +7,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await fetch(
-      `${pocketbaseUrl}/api/collections/About/records/${id}`
-    )
+    const response = await fetch(`${pocketbaseUrl}/api/collections/About/records/${id}`)
 
     if (!response.ok) {
       throw createError({ statusCode: response.status, statusMessage: 'About record not found' })

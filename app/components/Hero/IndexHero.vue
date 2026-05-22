@@ -1,16 +1,16 @@
 <script setup lang="ts">
 interface HomepageData {
-  id: string;
-  title: string;
-  image: string;
-  imageUrl: string;
+  id: string
+  title: string
+  image: string
+  imageUrl: string
 }
 
-const { data: homepageData } = await useFetch<HomepageData>("/api/homepage", {
-  key: "homepage",
-});
+const { data: homepageData } = await useFetch<HomepageData>('/api/homepage', {
+  key: 'homepage'
+})
 
-const imageUrl = computed(() => homepageData.value?.imageUrl || null);
+const imageUrl = computed(() => homepageData.value?.imageUrl || null)
 </script>
 
 <template>
@@ -19,15 +19,18 @@ const imageUrl = computed(() => homepageData.value?.imageUrl || null);
     :ui="{
       root: 'h-[100dvh] flex items-center justify-center',
       container: 'py-0 max-w-none',
-      title: 'text-white',
+      title: 'text-white'
     }"
   >
     <template #top>
-      <div v-if="imageUrl" class="absolute inset-0 -z-10">
+      <div
+        v-if="imageUrl"
+        class="absolute inset-0 -z-10"
+      >
         <img
           :src="imageUrl"
           alt="Hero background"
-          class="w-full h-full object-cover"
+          class="h-full w-full object-cover"
         >
       </div>
     </template>

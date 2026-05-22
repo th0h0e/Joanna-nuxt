@@ -7,7 +7,7 @@ interface ProjectNavigationProps {
 }
 
 const props = withDefaults(defineProps<ProjectNavigationProps>(), {
-  settingsData: null,
+  settingsData: null
 })
 
 const emit = defineEmits<{
@@ -25,7 +25,7 @@ const scrollToProject = (title: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center w-full h-full">
+  <div class="flex h-full w-full flex-col items-center justify-center">
     <UPageList>
       <UPageCard
         v-for="(title, index) in projectTitles"
@@ -34,7 +34,7 @@ const scrollToProject = (title: string) => {
         @click="scrollToProject(title)"
       >
         <template #body>
-          <span class="text-4xl text-black uppercase cursor-pointer">{{ title }}</span>
+          <span class="cursor-pointer text-4xl text-black uppercase">{{ title }}</span>
         </template>
       </UPageCard>
     </UPageList>

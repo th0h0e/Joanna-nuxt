@@ -1,35 +1,42 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxt/hints", "@nuxt/image", "@nuxt/scripts", "@compodium/nuxt"],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/ui',
+    '@nuxt/hints',
+    '@nuxt/image',
+    '@nuxt/scripts',
+    '@compodium/nuxt'
+  ],
 
   components: [
     {
       path: '~/components',
-      pathPrefix: false,
-    },
+      pathPrefix: false
+    }
   ],
 
   devtools: {
-    enabled: true,
+    enabled: true
   },
 
-  css: ["~/assets/css/main.css"],
+  css: ['~/assets/css/main.css'],
 
   colorMode: {
-    preference: "dark",
-    fallback: "dark",
+    preference: 'dark',
+    fallback: 'dark'
   },
 
   routeRules: {
-    "/api/**": { cors: true },
+    '/api/**': { cors: true }
   },
 
   runtimeConfig: {
     // Server-side only (not exposed to client)
-    pocketbaseUrl: "https://admin.kontext.site", // default value, overridden by NITRO_POCKETBASE_URL
+    pocketbaseUrl: 'https://admin.kontext.site', // default value, overridden by NITRO_POCKETBASE_URL
     public: {
-      pocketbaseUrl: "https://admin.kontext.site", // available on client
-    },
+      pocketbaseUrl: 'https://admin.kontext.site' // available on client
+    }
   },
 
   ui: {
@@ -51,15 +58,15 @@ export default defineNuxtConfig({
       }
     }
   },
-  
-  compatibilityDate: "2026-03-27",
+
+  compatibilityDate: '2026-03-27',
 
   eslint: {
     config: {
       stylistic: {
-        commaDangle: "never",
-        braceStyle: "1tbs",
-      },
-    },
-  },
-});
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  }
+})

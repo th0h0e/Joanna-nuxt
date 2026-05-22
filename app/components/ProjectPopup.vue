@@ -1,15 +1,15 @@
 <script setup lang="ts">
 interface Props {
-  title?: string;
-  description?: string;
-  responsibility?: unknown;
+  title?: string
+  description?: string
+  responsibility?: unknown
 }
 
 withDefaults(defineProps<Props>(), {
-  title: "Project",
-  description: "",
-  responsibility: undefined,
-});
+  title: 'Project',
+  description: '',
+  responsibility: undefined
+})
 </script>
 
 <template>
@@ -19,10 +19,13 @@ withDefaults(defineProps<Props>(), {
     :overlay="false"
     :close="false"
   >
-    <span class="text-4xl cursor-pointer uppercase">{{ title }}</span>
+    <span class="cursor-pointer text-4xl uppercase">{{ title }}</span>
 
     <template #body>
-      <div v-if="responsibility" class="space-y-4 uppercase">
+      <div
+        v-if="responsibility"
+        class="space-y-4 uppercase"
+      >
         <div>
           <p class="text-sm">Responsibility</p>
           <p class="text-sm">{{ responsibility }}</p>

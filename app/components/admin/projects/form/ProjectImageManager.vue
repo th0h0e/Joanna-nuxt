@@ -17,7 +17,7 @@ watch(
   ([_newId, newImgs]) => {
     existingImages.value = [...newImgs]
     removedImages.value = new Set()
-    newImages.value = []       // ← note: newImages, not newFiles
+    newImages.value = [] // ← note: newImages, not newFiles
   }
 )
 
@@ -57,16 +57,19 @@ defineExpose({ getFormDataEntries })
 <template>
   <!-- Existing Images -->
   <UFormField label="Current Images">
-    <div v-if="displayImages.length" class="flex flex-wrap gap-2">
+    <div
+      v-if="displayImages.length"
+      class="flex flex-wrap gap-2"
+    >
       <div
         v-for="image in existingImages"
         :key="image"
-        class="relative group"
+        class="group relative"
       >
         <img
           :src="getImageUrl(image)"
           :alt="image"
-          class="h-20 w-28 object-cover rounded border"
+          class="h-20 w-28 rounded border object-cover"
           :class="removedImages.has(image) ? 'opacity-30 grayscale' : ''"
         >
         <UButton
@@ -74,16 +77,24 @@ defineExpose({ getFormDataEntries })
           :color="removedImages.has(image) ? 'success' : 'error'"
           variant="solid"
           :icon="removedImages.has(image) ? 'i-lucide-undo-2' : 'i-lucide-x'"
-          class="absolute -top-1.5 -right-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
+          class="absolute -top-1.5 -right-1.5 opacity-0 transition-opacity group-hover:opacity-100"
           @click="toggleRemoveImage(image)"
         />
       </div>
     </div>
-    <p v-else class="text-sm text-dimmed">No images uploaded yet</p>
+    <p
+      v-else
+      class="text-dimmed text-sm"
+    >
+      No images uploaded yet
+    </p>
   </UFormField>
 
   <!-- New Images Upload -->
-  <UFormField label="Add Images" hint="Select new images to upload">
+  <UFormField
+    label="Add Images"
+    hint="Select new images to upload"
+  >
     <UFileUpload
       v-model="newImages"
       multiple

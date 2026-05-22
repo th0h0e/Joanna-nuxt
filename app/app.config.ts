@@ -1,34 +1,34 @@
 export default defineAppConfig({
   ui: {
     colors: {
-      primary: "black",
-      neutral: "neutral",
+      primary: 'black',
+      neutral: 'neutral'
     },
     modal: {
       slots: {
-        title: "uppercase text-center",
-        description: "uppercase text-center",
-        body: "text-center",
-      },
+        title: 'uppercase text-center',
+        description: 'uppercase text-center',
+        body: 'text-center'
+      }
     },
     pageHero: {
       slots: {
-        title: "text-4xl sm:text-4xl text-center text-pretty tracking-tight",
-      },
+        title: 'text-4xl sm:text-4xl text-center text-pretty tracking-tight'
+      }
     },
     pageList: {
-      base: "relative flex flex-col items-center gap-0",
+      base: 'relative flex flex-col items-center gap-0'
     },
     pageCard: {
       slots: {
-        root: "text-center w-full text-pretty tracking-tight",
-        container: "relative flex flex-col flex-1 lg:grid gap-x-8 gap-y-0 p-1 sm:p-1",
-        body: "text-center w-full text-pretty tracking-tight",
-        wrapper: "text-center w-full text-pretty tracking-tight",
-      },
+        root: 'text-center w-full text-pretty tracking-tight',
+        container: 'relative flex flex-col flex-1 lg:grid gap-x-8 gap-y-0 p-1 sm:p-1',
+        body: 'text-center w-full text-pretty tracking-tight',
+        wrapper: 'text-center w-full text-pretty tracking-tight'
+      }
     },
-    input: { slots: { root: "w-full" } },
-    inputMenu: { slots: { root: "w-full" } },
-    textarea: { slots: { root: "w-full" } },
-  },
-});
+    input: { slots: { root: 'w-full' } },
+    inputMenu: { slots: { root: 'w-full' } },
+    textarea: { slots: { root: 'w-full' } }
+  }
+})

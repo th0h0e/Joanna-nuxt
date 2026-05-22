@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
 
@@ -13,7 +13,10 @@ export default defineEventHandler(async (event) => {
 
   if (!response.ok) {
     const error = await response.json()
-    throw createError({ statusCode: response.status, statusMessage: error.message || 'Delete failed' })
+    throw createError({
+      statusCode: response.status,
+      statusMessage: error.message || 'Delete failed'
+    })
   }
 
   sendNoContent(event)

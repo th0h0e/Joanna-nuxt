@@ -2,9 +2,9 @@
 import type { PortfolioProject } from '#shared/types/pocketbase-types'
 
 // Fetch portfolio projects from PocketBase
-const { data: projects } = await useFetch<PortfolioProject[]>("/api/portfolio", {
-  key: "portfolio",
-});
+const { data: projects } = await useFetch<PortfolioProject[]>('/api/portfolio', {
+  key: 'portfolio'
+})
 
 // Fetch the saved order from our KV storage
 const { data: savedOrder } = await useFetch<string[]>('/api/tableOrder', {
@@ -30,30 +30,34 @@ const sortedProjects = computed(() => {
   })
 })
 
-const projectTitles = computed(() => (projects.value ?? []).map((p) => p.title));
+const projectTitles = computed(() => (projects.value ?? []).map(p => p.title))
 
-const { pocketbaseUrl } = useRuntimeConfig().public;
+const { pocketbaseUrl } = useRuntimeConfig().public
 
 // Helper to get image URLs for a project
 const getProjectImages = (project: PortfolioProject) => {
-  if (!project.images || project.images.length === 0) return [];
+  if (!project.images || project.images.length === 0) return []
   return project.images.map(
     (image: string) =>
-      `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${image}?thumb=1200x800`,
-  );
-};
+      `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${image}?thumb=1200x800`
+  )
+}
 </script>
 
 <template>
-  <div class="h-screen overflow-y-scroll snap-container">
+  <div class="snap-container h-screen overflow-y-scroll">
     <HamburgerMenu :project-titles="projectTitles" />
 
     <div class="snap-point">
       <IndexHero />
     </div>
 
-    <div v-for="project in sortedProjects" :key="project.id" class="snap-point">
-      <a :id="`project-${project.title.replace(/\s+/g, '-').toLowerCase()}`"/>
+    <div
+      v-for="project in sortedProjects"
+      :key="project.id"
+      class="snap-point"
+    >
+      <a :id="`project-${project.title.replace(/\s+/g, '-').toLowerCase()}`" />
       <CarouselDesktop
         :images="getProjectImages(project)"
         :project-title="project.title"
@@ -61,7 +65,6 @@ const getProjectImages = (project: PortfolioProject) => {
         :project-responsibility="project.responsibility"
         :alt="project.title"
       />
-
     </div>
 
     <div class="snap-point">

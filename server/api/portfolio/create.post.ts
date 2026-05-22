@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
 
   const contentType = getRequestHeader(event, 'content-type') || ''
@@ -12,11 +12,15 @@ export default defineEventHandler(async (event) => {
         const fieldName = part.name!
 
         // Map camelCase field names to PocketBase's PascalCase collection field names
-        const pbFieldName
-          = fieldName === 'title' ? 'Title'
-            : fieldName === 'description' ? 'Description'
-              : fieldName === 'responsibility' ? 'Responsibility_json'
-                : fieldName === 'images' ? 'Images'
+        const pbFieldName =
+          fieldName === 'title'
+            ? 'Title'
+            : fieldName === 'description'
+              ? 'Description'
+              : fieldName === 'responsibility'
+                ? 'Responsibility_json'
+                : fieldName === 'images'
+                  ? 'Images'
                   : fieldName
 
         if (part.filename && part.type) {
@@ -27,17 +31,17 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const response = await fetch(
-      `${pocketbaseUrl}/api/collections/Portfolio_Projects/records`,
-      {
-        method: 'POST',
-        body: formData
-      }
-    )
+    const response = await fetch(`${pocketbaseUrl}/api/collections/Portfolio_Projects/records`, {
+      method: 'POST',
+      body: formData
+    })
 
     if (!response.ok) {
       const error = await response.json()
-      throw createError({ statusCode: response.status, statusMessage: error.message || 'Create failed' })
+      throw createError({
+        statusCode: response.status,
+        statusMessage: error.message || 'Create failed'
+      })
     }
 
     const item = await response.json()
@@ -52,18 +56,18 @@ export default defineEventHandler(async (event) => {
   if (body.description !== undefined) pbData.Description = body.description
   if (body.responsibility !== undefined) pbData.Responsibility_json = body.responsibility
 
-  const response = await fetch(
-    `${pocketbaseUrl}/api/collections/Portfolio_Projects/records`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(pbData)
-    }
-  )
+  const response = await fetch(`${pocketbaseUrl}/api/collections/Portfolio_Projects/records`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pbData)
+  })
 
   if (!response.ok) {
     const error = await response.json()
-    throw createError({ statusCode: response.status, statusMessage: error.message || 'Create failed' })
+    throw createError({
+      statusCode: response.status,
+      statusMessage: error.message || 'Create failed'
+    })
   }
 
   const item = await response.json()

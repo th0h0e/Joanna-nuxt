@@ -11,7 +11,7 @@ defineProps<HamburgerMenuProps>()
 const isOpen = ref(false)
 const showCloseBtn = ref(false)
 
-watch(isOpen, (value) => {
+watch(isOpen, value => {
   if (value) {
     setTimeout(() => {
       showCloseBtn.value = true
@@ -28,7 +28,11 @@ watch(isOpen, (value) => {
     @click="isOpen = true"
   />
 
-  <UModal v-model:open="isOpen" :fullscreen="true" :overlay="false">
+  <UModal
+    v-model:open="isOpen"
+    :fullscreen="true"
+    :overlay="false"
+  >
     <template #content>
       <div class="relative flex h-full items-center justify-center bg-white">
         <div
@@ -36,7 +40,10 @@ watch(isOpen, (value) => {
           class="absolute top-6 right-6 z-50 size-6 cursor-pointer bg-black transition-colors"
           @click="isOpen = false"
         />
-        <ProjectNavigation :project-titles="projectTitles" @navigate="isOpen = false" />
+        <ProjectNavigation
+          :project-titles="projectTitles"
+          @navigate="isOpen = false"
+        />
       </div>
     </template>
   </UModal>

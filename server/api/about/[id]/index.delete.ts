@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
 
@@ -7,10 +7,9 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await fetch(
-      `${pocketbaseUrl}/api/collections/About/records/${id}`,
-      { method: 'DELETE' }
-    )
+    const response = await fetch(`${pocketbaseUrl}/api/collections/About/records/${id}`, {
+      method: 'DELETE'
+    })
 
     if (!response.ok) {
       let message = 'Delete failed'

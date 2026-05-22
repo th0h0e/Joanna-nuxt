@@ -1,10 +1,8 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
 
   try {
-    const response = await fetch(
-      `${pocketbaseUrl}/api/collections/Settings/records`
-    )
+    const response = await fetch(`${pocketbaseUrl}/api/collections/Settings/records`)
 
     if (!response.ok) {
       throw createError({ statusCode: response.status, statusMessage: 'Failed to fetch settings' })
@@ -24,7 +22,7 @@ export default defineEventHandler(async (event) => {
       }>
     } = await response.json()
 
-    return data.items.map((item) => ({
+    return data.items.map(item => ({
       id: item.id,
       desktopFontSize: item.Desktop_Font_Size,
       largeDesktopFontSize: item.Large_Desktop_Font_Size,

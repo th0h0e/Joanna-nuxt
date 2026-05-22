@@ -160,31 +160,27 @@ export type UsersRecord = {
 }
 
 // Response types include system fields and match responses from the PocketBase API
-export type AboutResponse<
-  TClient_List_Json = unknown,
-  Texpand = unknown
-> = Required<AboutRecord<TClient_List_Json>> & BaseSystemFields<Texpand>
-export type HomepageResponse<Texpand = unknown> = Required<HomepageRecord>
-  & BaseSystemFields<Texpand>
-export type PortfolioProjectsResponse<
-  TResponsibility_json = unknown,
-  Texpand = unknown
-> = Required<PortfolioProjectsRecord<TResponsibility_json>>
-  & BaseSystemFields<Texpand>
-export type SettingsResponse<Texpand = unknown> = Required<SettingsRecord>
-  & BaseSystemFields<Texpand>
-export type AuthoriginsResponse<Texpand = unknown>
-  = Required<AuthoriginsRecord> & BaseSystemFields<Texpand>
-export type ExternalauthsResponse<Texpand = unknown>
-  = Required<ExternalauthsRecord> & BaseSystemFields<Texpand>
-export type MfasResponse<Texpand = unknown> = Required<MfasRecord>
-  & BaseSystemFields<Texpand>
-export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord>
-  & BaseSystemFields<Texpand>
-export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord>
-  & AuthSystemFields<Texpand>
-export type UsersResponse<Texpand = unknown> = Required<UsersRecord>
-  & AuthSystemFields<Texpand>
+export type AboutResponse<TClient_List_Json = unknown, Texpand = unknown> = Required<
+  AboutRecord<TClient_List_Json>
+> &
+  BaseSystemFields<Texpand>
+export type HomepageResponse<Texpand = unknown> = Required<HomepageRecord> &
+  BaseSystemFields<Texpand>
+export type PortfolioProjectsResponse<TResponsibility_json = unknown, Texpand = unknown> = Required<
+  PortfolioProjectsRecord<TResponsibility_json>
+> &
+  BaseSystemFields<Texpand>
+export type SettingsResponse<Texpand = unknown> = Required<SettingsRecord> &
+  BaseSystemFields<Texpand>
+export type AuthoriginsResponse<Texpand = unknown> = Required<AuthoriginsRecord> &
+  BaseSystemFields<Texpand>
+export type ExternalauthsResponse<Texpand = unknown> = Required<ExternalauthsRecord> &
+  BaseSystemFields<Texpand>
+export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemFields<Texpand>
+export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
+export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> &
+  AuthSystemFields<Texpand>
+export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
 
@@ -221,14 +217,13 @@ type ProcessCreateAndUpdateFields<T> = Omit<
     // Omit AutoDate fields
     [K in keyof T as Extract<T[K], IsoAutoDateString> extends never
       ? K
-      : never]: // Convert FileNameString to File
-    T[K] extends infer U
+      : never]: T[K] extends infer U // Convert FileNameString to File
       ? U extends FileNameString | FileNameString[]
         ? U extends any[]
           ? File[]
           : File
         : U
-      : never;
+      : never
   },
   'id'
 >
@@ -261,19 +256,17 @@ export type UpdateAuth<T> = Partial<
 }
 
 // Update type for Base collections
-export type UpdateBase<T> = Partial<
-  Omit<ProcessCreateAndUpdateFields<T>, keyof BaseSystemFields>
->
+export type UpdateBase<T> = Partial<Omit<ProcessCreateAndUpdateFields<T>, keyof BaseSystemFields>>
 
 // Get the correct create type for any collection
-export type Create<T extends keyof CollectionResponses>
-  = CollectionResponses[T] extends AuthSystemFields
+export type Create<T extends keyof CollectionResponses> =
+  CollectionResponses[T] extends AuthSystemFields
     ? CreateAuth<CollectionRecords[T]>
     : CreateBase<CollectionRecords[T]>
 
 // Get the correct update type for any collection
-export type Update<T extends keyof CollectionResponses>
-  = CollectionResponses[T] extends AuthSystemFields
+export type Update<T extends keyof CollectionResponses> =
+  CollectionResponses[T] extends AuthSystemFields
     ? UpdateAuth<CollectionRecords[T]>
     : UpdateBase<CollectionRecords[T]>
 
@@ -282,7 +275,7 @@ export type Update<T extends keyof CollectionResponses>
 
 export type TypedPocketBase = {
   collection<T extends keyof CollectionResponses>(
-    idOrName: T,
+    idOrName: T
   ): RecordService<CollectionResponses[T]>
 } & PocketBase
 
@@ -295,7 +288,7 @@ export type PortfolioProject = {
   title: string
   description: string
   images: string[]
-  responsibility: unknown
+  responsibility: string[]
   created: string
   updated: string
 }

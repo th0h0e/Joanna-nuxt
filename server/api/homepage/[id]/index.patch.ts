@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
 
@@ -16,15 +16,23 @@ export default defineEventHandler(async (event) => {
         for (const part of parts) {
           const fieldName = part.name!
 
-          const pbFieldName
-            = fieldName === 'title' ? 'Hero_Title'
-              : fieldName === 'heroImage' ? 'Hero_Image'
-                : fieldName === 'heroImage+' ? 'Hero_Image+'
-                  : fieldName === 'heroImage-' ? 'Hero_Image-'
-                    : fieldName === 'heroImageMobile' ? 'Hero_Image_Mobile'
-                      : fieldName === 'heroImageMobile+' ? 'Hero_Image_Mobile+'
-                        : fieldName === 'heroImageMobile-' ? 'Hero_Image_Mobile-'
-                          : fieldName === 'isActive' ? 'Is_Active'
+          const pbFieldName =
+            fieldName === 'title'
+              ? 'Hero_Title'
+              : fieldName === 'heroImage'
+                ? 'Hero_Image'
+                : fieldName === 'heroImage+'
+                  ? 'Hero_Image+'
+                  : fieldName === 'heroImage-'
+                    ? 'Hero_Image-'
+                    : fieldName === 'heroImageMobile'
+                      ? 'Hero_Image_Mobile'
+                      : fieldName === 'heroImageMobile+'
+                        ? 'Hero_Image_Mobile+'
+                        : fieldName === 'heroImageMobile-'
+                          ? 'Hero_Image_Mobile-'
+                          : fieldName === 'isActive'
+                            ? 'Is_Active'
                             : fieldName
 
           if (part.filename && part.type) {
@@ -43,18 +51,18 @@ export default defineEventHandler(async (event) => {
       if (body.isActive !== undefined) formData.append('Is_Active', String(body.isActive))
     }
 
-    const response = await fetch(
-      `${pocketbaseUrl}/api/collections/Homepage/records/${id}`,
-      {
-        method: 'PATCH',
-        body: formData
-      }
-    )
+    const response = await fetch(`${pocketbaseUrl}/api/collections/Homepage/records/${id}`, {
+      method: 'PATCH',
+      body: formData
+    })
 
     const data = await response.json()
 
     if (!response.ok) {
-      throw createError({ statusCode: response.status, statusMessage: data.message || 'Update failed' })
+      throw createError({
+        statusCode: response.status,
+        statusMessage: data.message || 'Update failed'
+      })
     }
 
     return { success: true }

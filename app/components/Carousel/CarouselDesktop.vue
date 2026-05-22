@@ -1,25 +1,25 @@
 <script setup lang="ts">
 interface Props {
-  images: string[];
-  projectTitle?: string;
-  projectDescription?: string;
-  projectResponsibility?: unknown;
-  alt?: string;
+  images: string[]
+  projectTitle?: string
+  projectDescription?: string
+  projectResponsibility?: unknown
+  alt?: string
 }
 
 withDefaults(defineProps<Props>(), {
-  projectTitle: "Project",
-  projectDescription: "",
+  projectTitle: 'Project',
+  projectDescription: '',
   projectResponsibility: undefined,
-  alt: "Image",
-});
+  alt: 'Image'
+})
 
 const isPopupOpen = ref(false)
 </script>
 
 <template>
-  <div class="relative w-screen h-dvh">
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+  <div class="relative h-dvh w-screen">
+    <div class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
       <div class="pointer-events-auto">
         <UModal
           v-model:open="isPopupOpen"
@@ -29,12 +29,16 @@ const isPopupOpen = ref(false)
           :close="false"
         >
           <span
-            class="text-4xl cursor-pointer text-pretty tracking-tight uppercase transition-opacity duration-300 text-white"
+            class="cursor-pointer text-4xl tracking-tight text-pretty text-white uppercase transition-opacity duration-300"
             :class="isPopupOpen ? 'opacity-0' : 'opacity-100'"
-          >{{ projectTitle }}</span>
+            >{{ projectTitle }}</span
+          >
 
           <template #body>
-            <div v-if="projectResponsibility" class="space-y-4 uppercase">
+            <div
+              v-if="projectResponsibility"
+              class="space-y-4 uppercase"
+            >
               <div>
                 <p class="text-sm">Responsibility</p>
                 <p class="text-sm">{{ projectResponsibility }}</p>
@@ -57,10 +61,14 @@ const isPopupOpen = ref(false)
         root: 'w-screen h-[100dvh]',
         viewport: 'w-screen h-[100dvh]',
         container: 'h-[100dvh]',
-        item: 'basis-full min-w-0 shrink-0 w-screen h-[100dvh]',
+        item: 'basis-full min-w-0 shrink-0 w-screen h-[100dvh]'
       }"
     >
-      <img :src="item" :alt="alt" class="w-full h-full object-cover" >
+      <img
+        :src="item"
+        :alt="alt"
+        class="h-full w-full object-cover"
+      >
     </UCarousel>
   </div>
 </template>
