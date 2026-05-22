@@ -69,8 +69,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   }
 }
 
-// Delete project  ──────────────────────────────────────────────
+// ── Delete project ────────────────────────────────────────────────────────
 async function onDelete() {
+  if (deleting.value) return
   deleting.value = true
 
   try {

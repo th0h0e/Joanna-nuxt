@@ -72,8 +72,8 @@ const columns: TableColumn<PortfolioProject>[] = [
     header: 'Responsibilities',
     cell: ({ row }) => {
       const resp = row.original.responsibility
-      if (!resp) return h('span', { class: 'text-dimmed text-sm' }, '—')
-      const text = typeof resp === 'string' ? resp : JSON.stringify(resp)
+      if (!resp || resp.length === 0) return h('span', { class: 'text-dimmed text-sm' }, '—')
+      const text = resp.join(', ')
       return h(
         'p',
         { class: 'text-sm truncate max-w-xs' },
