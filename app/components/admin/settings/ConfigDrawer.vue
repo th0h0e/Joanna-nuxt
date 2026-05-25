@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { PortfolioProject } from '#shared/types/pocketbase-types'
+import type { Setting } from '#shared/types/pocketbase-types'
 
 defineProps<{
-  project: PortfolioProject | null
+  setting: Setting | null
 }>()
 
 const emit = defineEmits<{
@@ -16,12 +16,12 @@ const drawerOpen = defineModel<boolean>('open', { default: false })
 <template>
   <UDrawer
     v-model:open="drawerOpen"
-    :title="project?.title ?? 'Project Settings'"
+    title="Site Settings"
   >
     <template #body>
-      <ProjectForm
-        v-if="project"
-        :project="project"
+      <AdminSettingsForm
+        v-if="setting"
+        :setting="setting"
         @success="emit('success')"
         @deleted="emit('deleted')"
       />

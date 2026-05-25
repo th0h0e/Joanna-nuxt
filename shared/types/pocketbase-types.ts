@@ -292,3 +292,40 @@ export type PortfolioProject = {
   created: string
   updated: string
 }
+
+export type About = {
+  id: string
+  portfolioTitle: string
+  aboutDescription: string
+  expertiseTitle: string
+  expertiseDescription: string
+  selectedClientsTitle: string
+  clientListJson: unknown
+  contactEmail: string
+  contactMessage: string
+  isActive: boolean
+  created: string
+  updated: string
+}
+
+export type Homepage = {
+  id: string
+  heroTitle: string
+  heroImage: string
+  heroImageMobile: string
+  isActive: boolean
+  created: string
+  updated: string
+}
+
+export type Setting = {
+  id: string
+  mobileFontSize: number
+  tabletFontSize: number
+  desktopFontSize: number
+  largeDesktopFontSize: number
+  showTopProgressBar: boolean
+  favicon: string
+  created: string
+  updated: string
+}

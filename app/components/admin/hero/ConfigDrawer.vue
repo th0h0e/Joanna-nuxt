@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { PortfolioProject } from '#shared/types/pocketbase-types'
+import type { Homepage } from '#shared/types/pocketbase-types'
 
 defineProps<{
-  project: PortfolioProject | null
+  homepage: Homepage | null
 }>()
 
 const emit = defineEmits<{
@@ -16,12 +16,12 @@ const drawerOpen = defineModel<boolean>('open', { default: false })
 <template>
   <UDrawer
     v-model:open="drawerOpen"
-    :title="project?.title ?? 'Project Settings'"
+    :title="homepage?.heroTitle ?? 'Homepage Settings'"
   >
     <template #body>
-      <ProjectForm
-        v-if="project"
-        :project="project"
+      <AdminHeroFormHomepageForm
+        v-if="homepage"
+        :homepage="homepage"
         @success="emit('success')"
         @deleted="emit('deleted')"
       />

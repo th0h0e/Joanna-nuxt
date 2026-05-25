@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import type { PortfolioProject } from '#shared/types/pocketbase-types'
+import type { Setting } from '#shared/types/pocketbase-types'
 
 const UButton = resolveComponent('UButton')
+const UBadge = resolveComponent('UBadge')
 
-const { data, status, refresh, savedOrder, getThumbnail, getImageUrl, persistOrder } =
-  usePortfolioData()
+const { data, status, refresh, savedOrder, getFaviconThumbnail, persistOrder } = useSettingsData()
 
 useSortableTable({
   data,
   savedOrder,
   persistOrder,
-  selector: '.portfolio-sortable-tbody'
+  selector: '.settings-sortable-tbody'
 })
 
-const columns: TableColumn<PortfolioProject>[] = [
+const columns: TableColumn<Setting>[] = [
   {
     id: 'expand',
     cell: ({ row }) =>
@@ -35,50 +35,40 @@ const columns: TableColumn<PortfolioProject>[] = [
       })
   },
   {
-    accessorKey: 'images',
-    header: 'Thumbnail',
+    accessorKey: 'favicon',
+    header: 'Favicon',
     cell: ({ row }) => {
-      const src = getThumbnail(row.original)
-      if (!src) return h('span', { class: 'text-dimmed text-sm' }, 'No image')
+      const src = getFaviconThumbnail(row.original)
+      if (!src) return h('span', { class: 'text-dimmed text-sm' }, 'No favicon')
       return h('img', {
         src,
-        alt: row.original.title,
+        alt: 'Favicon',
         loading: 'lazy',
-        class: 'w-20 h-14 object-cover rounded'
+        class: 'w-8 h-8 object-contain rounded'
       })
     }
   },
   {
-    accessorKey: 'title',
-    header: 'Title',
+    accessorKey: 'desktopFontSize',
+    header: 'Font Sizes',
     cell: ({ row }) => {
-      return h('p', { class: 'font-medium text-highlighted' }, row.original.title)
+      const s = row.original
+      const sizes = [s.mobileFontSize, s.tabletFontSize, s.desktopFontSize, s.largeDesktopFontSize]
+        .filter(v => v != null)
+        .map(v => `${v}px`)
+        .join(' / ')
+      return h('p', { class: 'text-sm' }, sizes || '—')
     }
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
+    accessorKey: 'showTopProgressBar',
+    header: 'Progress Bar',
     cell: ({ row }) => {
-      const desc = row.original.description
-      return h(
-        'p',
-        { class: 'text-sm truncate max-w-xs' },
-        desc && desc.length > 60 ? desc.slice(0, 60) + '…' : desc
-      )
-    }
-  },
-  {
-    accessorKey: 'responsibility',
-    header: 'Responsibilities',
-    cell: ({ row }) => {
-      const resp = row.original.responsibility
-      if (!resp || resp.length === 0) return h('span', { class: 'text-dimmed text-sm' }, '—')
-      const text = resp.join(', ')
-      return h(
-        'p',
-        { class: 'text-sm truncate max-w-xs' },
-        text.length > 60 ? text.slice(0, 60) + '…' : text
-      )
+      return h(UBadge, {
+        color: row.original.showTopProgressBar ? 'success' : 'neutral',
+        variant: 'subtle',
+        label: row.original.showTopProgressBar ? 'Visible' : 'Hidden'
+      })
     }
   },
   {
@@ -97,10 +87,10 @@ const columns: TableColumn<PortfolioProject>[] = [
 
 const expanded = ref<Record<string, boolean>>({})
 const drawerOpen = ref(false)
-const selectedProject = ref<PortfolioProject | null>(null)
+const selectedSetting = ref<Setting | null>(null)
 
-const openSettings = (project: PortfolioProject) => {
-  selectedProject.value = project
+const openSettings = (setting: Setting) => {
+  selectedSetting.value = setting
   drawerOpen.value = true
 }
 
@@ -124,10 +114,9 @@ const onFormSuccess = async () => {
   await refresh()
   reSortData()
 
-  // Sync selectedProject with fresh data
-  if (selectedProject.value) {
-    const updated = data.value?.find(p => p.id === selectedProject.value!.id)
-    if (updated) selectedProject.value = updated
+  if (selectedSetting.value) {
+    const updated = data.value?.find(p => p.id === selectedSetting.value!.id)
+    if (updated) selectedSetting.value = updated
   }
 }
 
@@ -146,37 +135,40 @@ const onDeleteSuccess = async () => {
     :columns="columns"
     :loading="status === 'pending' || status === 'idle'"
     :ui="{
-      tbody: 'portfolio-sortable-tbody',
+      tbody: 'settings-sortable-tbody',
       tr: 'data-[expanded=true]:bg-elevated/50'
     }"
     class="flex-1"
   >
     <template #expanded="{ row }">
-      <div
-        v-if="row.original.images && row.original.images.length"
-        class="flex gap-3 overflow-x-auto p-4"
-      >
-        <img
-          v-for="image in row.original.images"
-          :key="image"
-          :src="getImageUrl(row.original, image)"
-          :alt="row.original.title"
-          loading="lazy"
-          class="h-32 w-auto shrink-0 rounded object-cover"
-        />
-      </div>
-      <div
-        v-else
-        class="text-dimmed p-4 text-sm"
-      >
-        No images
+      <div class="space-y-2 p-4 text-sm">
+        <p>
+          <span class="text-highlighted font-medium">Mobile:</span>
+          {{ row.original.mobileFontSize ?? '—' }}px
+        </p>
+        <p>
+          <span class="text-highlighted font-medium">Tablet:</span>
+          {{ row.original.tabletFontSize ?? '—' }}px
+        </p>
+        <p>
+          <span class="text-highlighted font-medium">Desktop:</span>
+          {{ row.original.desktopFontSize ?? '—' }}px
+        </p>
+        <p>
+          <span class="text-highlighted font-medium">Large Desktop:</span>
+          {{ row.original.largeDesktopFontSize ?? '—' }}px
+        </p>
+        <p>
+          <span class="text-highlighted font-medium">Progress Bar:</span>
+          {{ row.original.showTopProgressBar ? 'Visible' : 'Hidden' }}
+        </p>
       </div>
     </template>
   </UTable>
 
-  <ConfigDrawer
+  <AdminSettingsConfigDrawer
     v-model:open="drawerOpen"
-    :project="selectedProject"
+    :setting="selectedSetting"
     @success="onFormSuccess"
     @deleted="onDeleteSuccess"
   />

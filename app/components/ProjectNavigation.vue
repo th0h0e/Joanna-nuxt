@@ -6,7 +6,7 @@ interface ProjectNavigationProps {
   settingsData?: SettingsResponse | null
 }
 
-const props = withDefaults(defineProps<ProjectNavigationProps>(), {
+withDefaults(defineProps<ProjectNavigationProps>(), {
   settingsData: null
 })
 

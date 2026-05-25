@@ -68,7 +68,7 @@ const isPopupOpen = ref(false)
         :src="item"
         :alt="alt"
         class="h-full w-full object-cover"
-      />
+      >
     </UCarousel>
   </div>
 </template>

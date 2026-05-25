@@ -1,35 +1,39 @@
-import type { PortfolioProject } from '#shared/types/pocketbase-types'
+import type { Homepage } from '#shared/types/pocketbase-types'
 
-export function usePortfolioData() {
+export function useHomepageData() {
   const { pocketbaseUrl } = useRuntimeConfig().public
   const toast = useToast()
 
-  // Fetch portfolio projects from PocketBase (client-only, no SSR).
-  // Returns rows in PocketBase's default order (creation date / ID),
-  // NOT in our custom sort order — useSortableTable fixes that.
-  const { data, status, refresh } = useLazyFetch<PortfolioProject[]>('/api/portfolio', {
-    key: 'portfolio-admin',
-    transform: data => data ?? [],
+  const { data, status, refresh } = useLazyFetch<Homepage[]>('/api/homepage', {
+    key: 'homepage-admin',
+    transform: data => {
+      // Handle both single-record and array responses
+      if (Array.isArray(data)) return data
+      if (data && typeof data === 'object' && 'id' in data) return [data as unknown as Homepage]
+      return []
+    },
     server: false
   })
 
-  // Fetch the saved display order from KV storage.
-  // Array of project IDs in the order the admin dragged them into.
   const { data: savedOrder } = useLazyFetch<string[]>('/api/tableOrder', {
-    key: 'table-order-admin',
-    query: { key: 'portfolio' },
+    key: 'table-order-homepage',
+    query: { key: 'homepage' },
     default: () => [],
     server: false
   })
 
   // ── Image URL helpers ────────────────────────────────────────────────────
-  const getThumbnail = (project: PortfolioProject) => {
-    if (!project.images || project.images.length === 0) return null
-    return `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${project.images[0]}?thumb=120x80`
+  const getThumbnail = (homepage: Homepage) => {
+    if (!homepage.heroImage) return null
+    return `${pocketbaseUrl}/api/files/Homepage/${homepage.id}/${homepage.heroImage}?thumb=120x80`
   }
 
-  const getImageUrl = (project: PortfolioProject, image: string) => {
-    return `${pocketbaseUrl}/api/files/Portfolio_Projects/${project.id}/${image}?thumb=400x300`
+  const getImageUrl = (homepage: Homepage, image: string) => {
+    return `${pocketbaseUrl}/api/files/Homepage/${homepage.id}/${image}?thumb=400x300`
+  }
+
+  const getFullImageUrl = (homepage: Homepage, image: string) => {
+    return `${pocketbaseUrl}/api/files/Homepage/${homepage.id}/${image}`
   }
 
   // ── Persist drag-and-drop order ──────────────────────────────────────────
@@ -37,7 +41,7 @@ export function usePortfolioData() {
     try {
       await $fetch('/api/tableOrder', {
         method: 'POST',
-        body: { key: 'portfolio', orderedIds }
+        body: { key: 'homepage', orderedIds }
       })
       toast.add({ title: 'Order saved', color: 'success' })
     } catch (error) {
@@ -54,6 +58,7 @@ export function usePortfolioData() {
     savedOrder,
     getThumbnail,
     getImageUrl,
+    getFullImageUrl,
     persistOrder
   }
 }

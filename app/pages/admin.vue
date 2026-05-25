@@ -19,9 +19,38 @@ definePageMeta({
       class="mt-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
     >
       <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-xl font-semibold">All Projects</h2>
+        <h2 class="text-xl font-semibold">Portfolio Projects</h2>
       </div>
-      <ConfigTable />
+      <AdminProjectsConfigTable />
+    </div>
+    <!-- Homepage (Hero) Table -->
+    <div
+      class="mt-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+    >
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Homepage</h2>
+      </div>
+      <AdminHeroConfigTable />
+    </div>
+
+    <!-- About Table -->
+    <div
+      class="mt-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+    >
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-xl font-semibold">About</h2>
+      </div>
+      <AdminAboutConfigTable />
+    </div>
+
+    <!-- Settings Table -->
+    <div
+      class="mt-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+    >
+      <div class="mb-6 flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Settings</h2>
+      </div>
+      <AdminSettingsConfigTable />
     </div>
   </div>
 </template>

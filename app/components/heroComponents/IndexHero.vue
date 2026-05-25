@@ -6,8 +6,8 @@ interface HomepageData {
   imageUrl: string
 }
 
-const { data: homepageData } = await useFetch<HomepageData>('/api/homepage', {
-  key: 'homepage'
+const { data: homepageData } = await useFetch<HomepageData>('/api/hero', {
+  key: 'homepage-hero'
 })
 
 const imageUrl = computed(() => homepageData.value?.imageUrl || null)

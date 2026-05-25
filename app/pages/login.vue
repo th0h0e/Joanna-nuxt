@@ -67,7 +67,7 @@ const handleLogin = async () => {
                 v-model="rememberMe"
                 type="checkbox"
                 class="h-4 w-4"
-              />
+              >
               <span class="text-sm">Remember me</span>
             </label>
             <NuxtLink

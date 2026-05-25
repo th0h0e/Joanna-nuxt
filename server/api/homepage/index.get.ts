@@ -11,23 +11,27 @@ export default defineEventHandler(async event => {
       })
     }
 
-    const data = await response.json()
+    const data: {
+      items: Array<{
+        id: string
+        Hero_Image?: string
+        Hero_Image_Mobile?: string
+        Hero_Title?: string
+        Is_Active?: boolean
+        created: string
+        updated: string
+      }>
+    } = await response.json()
 
-    // Get first record (assuming Homepage collection has only one record)
-    const record = data.items?.[0]
-
-    if (!record) {
-      return null
-    }
-
-    return {
-      id: record.id,
-      title: record.Hero_Title,
-      image: record.Hero_Image,
-      imageUrl: `${pocketbaseUrl}/api/files/Homepage/${record.id}/${record.Hero_Image}`,
-      heroImageMobile: record.Hero_Image_Mobile,
-      isActive: record.Is_Active
-    }
+    return data.items.map(item => ({
+      id: item.id,
+      heroTitle: item.Hero_Title ?? '',
+      heroImage: item.Hero_Image ?? '',
+      heroImageMobile: item.Hero_Image_Mobile ?? '',
+      isActive: item.Is_Active ?? false,
+      created: item.created,
+      updated: item.updated
+    }))
   } catch (error) {
     if (error && typeof error === 'object' && 'statusCode' in error) throw error
     throw createError({ statusCode: 503, statusMessage: 'PocketBase is unreachable' })

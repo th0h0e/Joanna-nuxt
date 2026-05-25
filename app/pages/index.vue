@@ -9,6 +9,7 @@ const { data: projects } = await useFetch<PortfolioProject[]>('/api/portfolio', 
 // Fetch the saved order from our KV storage
 const { data: savedOrder } = await useFetch<string[]>('/api/tableOrder', {
   key: 'table-order',
+  query: { key: 'portfolio' },
   default: () => []
 })
 
@@ -49,7 +50,7 @@ const getProjectImages = (project: PortfolioProject) => {
     <HamburgerMenu :project-titles="projectTitles" />
 
     <div class="snap-point">
-      <IndexHero />
+      <HeroComponentsIndexHero />
     </div>
 
     <div

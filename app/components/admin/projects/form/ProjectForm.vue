@@ -134,7 +134,7 @@ async function onDelete() {
         />
       </UFormField>
 
-      <ProjectImageManager
+      <AdminProjectsFormProjectImageManager
         ref="imageManager"
         :project-id="project.id"
         :images="project.images"

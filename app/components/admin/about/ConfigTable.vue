@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
-import type { PortfolioProject } from '#shared/types/pocketbase-types'
+import type { About } from '#shared/types/pocketbase-types'
 
 const UButton = resolveComponent('UButton')
 
-const { data, status, refresh, savedOrder, getThumbnail, getImageUrl, persistOrder } =
-  usePortfolioData()
+const { data, status, refresh, savedOrder, persistOrder } = useAboutData()
 
 useSortableTable({
   data,
   savedOrder,
   persistOrder,
-  selector: '.portfolio-sortable-tbody'
+  selector: '.about-sortable-tbody'
 })
 
-const columns: TableColumn<PortfolioProject>[] = [
+const columns: TableColumn<About>[] = [
   {
     id: 'expand',
     cell: ({ row }) =>
@@ -35,50 +34,24 @@ const columns: TableColumn<PortfolioProject>[] = [
       })
   },
   {
-    accessorKey: 'images',
-    header: 'Thumbnail',
+    accessorKey: 'portfolioTitle',
+    header: 'Portfolio Title',
     cell: ({ row }) => {
-      const src = getThumbnail(row.original)
-      if (!src) return h('span', { class: 'text-dimmed text-sm' }, 'No image')
-      return h('img', {
-        src,
-        alt: row.original.title,
-        loading: 'lazy',
-        class: 'w-20 h-14 object-cover rounded'
-      })
+      return h('p', { class: 'font-medium text-highlighted' }, row.original.portfolioTitle || '—')
     }
   },
   {
-    accessorKey: 'title',
-    header: 'Title',
+    accessorKey: 'contactEmail',
+    header: 'Contact Email',
     cell: ({ row }) => {
-      return h('p', { class: 'font-medium text-highlighted' }, row.original.title)
+      return h('p', { class: 'text-sm truncate max-w-xs' }, row.original.contactEmail || '—')
     }
   },
   {
-    accessorKey: 'description',
-    header: 'Description',
+    accessorKey: 'expertiseTitle',
+    header: 'Expertise Title',
     cell: ({ row }) => {
-      const desc = row.original.description
-      return h(
-        'p',
-        { class: 'text-sm truncate max-w-xs' },
-        desc && desc.length > 60 ? desc.slice(0, 60) + '…' : desc
-      )
-    }
-  },
-  {
-    accessorKey: 'responsibility',
-    header: 'Responsibilities',
-    cell: ({ row }) => {
-      const resp = row.original.responsibility
-      if (!resp || resp.length === 0) return h('span', { class: 'text-dimmed text-sm' }, '—')
-      const text = resp.join(', ')
-      return h(
-        'p',
-        { class: 'text-sm truncate max-w-xs' },
-        text.length > 60 ? text.slice(0, 60) + '…' : text
-      )
+      return h('p', { class: 'text-sm truncate max-w-xs' }, row.original.expertiseTitle || '—')
     }
   },
   {
@@ -97,10 +70,10 @@ const columns: TableColumn<PortfolioProject>[] = [
 
 const expanded = ref<Record<string, boolean>>({})
 const drawerOpen = ref(false)
-const selectedProject = ref<PortfolioProject | null>(null)
+const selectedAbout = ref<About | null>(null)
 
-const openSettings = (project: PortfolioProject) => {
-  selectedProject.value = project
+const openSettings = (about: About) => {
+  selectedAbout.value = about
   drawerOpen.value = true
 }
 
@@ -124,10 +97,9 @@ const onFormSuccess = async () => {
   await refresh()
   reSortData()
 
-  // Sync selectedProject with fresh data
-  if (selectedProject.value) {
-    const updated = data.value?.find(p => p.id === selectedProject.value!.id)
-    if (updated) selectedProject.value = updated
+  if (selectedAbout.value) {
+    const updated = data.value?.find(p => p.id === selectedAbout.value!.id)
+    if (updated) selectedAbout.value = updated
   }
 }
 
@@ -146,37 +118,42 @@ const onDeleteSuccess = async () => {
     :columns="columns"
     :loading="status === 'pending' || status === 'idle'"
     :ui="{
-      tbody: 'portfolio-sortable-tbody',
+      tbody: 'about-sortable-tbody',
       tr: 'data-[expanded=true]:bg-elevated/50'
     }"
     class="flex-1"
   >
     <template #expanded="{ row }">
-      <div
-        v-if="row.original.images && row.original.images.length"
-        class="flex gap-3 overflow-x-auto p-4"
-      >
-        <img
-          v-for="image in row.original.images"
-          :key="image"
-          :src="getImageUrl(row.original, image)"
-          :alt="row.original.title"
-          loading="lazy"
-          class="h-32 w-auto shrink-0 rounded object-cover"
-        />
-      </div>
-      <div
-        v-else
-        class="text-dimmed p-4 text-sm"
-      >
-        No images
+      <div class="space-y-3 p-4 text-sm">
+        <div>
+          <span class="text-highlighted font-medium">About Description:</span>
+          <p class="text-dimmed mt-1 whitespace-pre-wrap">
+            {{ row.original.aboutDescription || '—' }}
+          </p>
+        </div>
+        <div>
+          <span class="text-highlighted font-medium">Expertise Description:</span>
+          <p class="text-dimmed mt-1 whitespace-pre-wrap">
+            {{ row.original.expertiseDescription || '—' }}
+          </p>
+        </div>
+        <div>
+          <span class="text-highlighted font-medium">Contact Message:</span>
+          <p class="text-dimmed mt-1 whitespace-pre-wrap">
+            {{ row.original.contactMessage || '—' }}
+          </p>
+        </div>
+        <div>
+          <span class="text-highlighted font-medium">Selected Clients Title:</span>
+          <p class="text-dimmed mt-1">{{ row.original.selectedClientsTitle || '—' }}</p>
+        </div>
       </div>
     </template>
   </UTable>
 
-  <ConfigDrawer
+  <AdminAboutConfigDrawer
     v-model:open="drawerOpen"
-    :project="selectedProject"
+    :about="selectedAbout"
     @success="onFormSuccess"
     @deleted="onDeleteSuccess"
   />

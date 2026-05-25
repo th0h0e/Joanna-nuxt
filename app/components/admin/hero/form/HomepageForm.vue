@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
-import type { PortfolioProject } from '#shared/types/pocketbase-types'
+import type { Homepage } from '#shared/types/pocketbase-types'
 
 const props = defineProps<{
-  project: PortfolioProject
+  homepage: Homepage
 }>()
 
 const emit = defineEmits<{
@@ -16,73 +16,63 @@ const toast = useToast()
 
 // ── Schema ────────────────────────────────────────────────────────────────
 const schema = z.object({
-  title: z.string().min(1, 'Title is required').max(200, 'Title is too long'),
-  description: z.string().min(1, 'Description is required').max(2000, 'Description is too long'),
-  responsibility: z.array(z.string()).optional().default([])
+  heroTitle: z.string().min(1, 'Hero title is required').max(200),
+  isActive: z.boolean().optional().default(false)
 })
 
-//Let types refer to zod schema above
 type Schema = z.output<typeof schema>
 
-// ── Reactive State ──────────────────────────────────────────────────────────────────
+// ── Reactive State ─────────────────────────────────────────────────────────
 const state = reactive<Partial<Schema>>({
-  title: props.project.title,
-  description: props.project.description,
-  responsibility: props.project.responsibility ?? []
+  heroTitle: props.homepage.heroTitle ?? '',
+  isActive: props.homepage.isActive ?? false
 })
 
 // ── Ref to image manager ───────────────────────────────────────────────────
 const imageManager = ref<{ getFormDataEntries: (formData: FormData) => Promise<void> } | null>(null)
 
-// ── Delete state (absorbed from ProjectDeleteZone) ─────────────────────────
+// ── Delete state ───────────────────────────────────────────────────────────
 const showDeleteConfirm = ref(false)
 const deleting = ref(false)
 
 // ── Submit (update) ────────────────────────────────────────────────────────
-// loading-auto on UForm handles disabling inputs automatically during submit
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     const formData = new FormData()
 
-    // Read from event.data (Zod-validated) instead of state (raw reactive)
-    formData.append('title', event.data.title)
-    formData.append('description', event.data.description)
-    if (event.data.responsibility && event.data.responsibility.length > 0) {
-      formData.append('responsibility', JSON.stringify(event.data.responsibility))
-    } else {
-      formData.append('responsibility', '[]')
-    }
+    formData.append('heroTitle', event.data.heroTitle)
+    formData.append('isActive', String(event.data.isActive ?? false))
 
     // Delegate image data to the image manager component
     await imageManager.value?.getFormDataEntries(formData)
 
-    await $fetch(`/api/portfolio/${props.project.id}`, {
+    await $fetch(`/api/homepage/${props.homepage.id}`, {
       method: 'PATCH',
       body: formData
     })
 
-    toast.add({ title: 'Project updated', color: 'success' })
+    toast.add({ title: 'Homepage updated', color: 'success' })
     emit('success')
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to update project'
+    const message = error instanceof Error ? error.message : 'Failed to update homepage'
     toast.add({ title: 'Update failed', description: message, color: 'error' })
   }
 }
 
-// ── Delete project ────────────────────────────────────────────────────────
+// ── Delete ─────────────────────────────────────────────────────────────────
 async function onDelete() {
   if (deleting.value) return
   deleting.value = true
 
   try {
-    await $fetch(`/api/portfolio/${props.project.id}`, {
+    await $fetch(`/api/homepage/${props.homepage.id}`, {
       method: 'DELETE'
     })
 
-    toast.add({ title: 'Project deleted', color: 'success' })
+    toast.add({ title: 'Homepage record deleted', color: 'success' })
     emit('deleted')
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Failed to delete project'
+    const message = error instanceof Error ? error.message : 'Failed to delete homepage record'
     toast.add({ title: 'Delete failed', description: message, color: 'error' })
   } finally {
     deleting.value = false
@@ -100,44 +90,28 @@ async function onDelete() {
       @submit="onSubmit"
     >
       <UFormField
-        label="Title"
-        name="title"
+        label="Hero Title"
+        name="heroTitle"
         required
       >
         <UInput
-          v-model="state.title"
-          placeholder="Project title"
+          v-model="state.heroTitle"
+          placeholder="Hero section title"
         />
       </UFormField>
 
       <UFormField
-        label="Description"
-        name="description"
-        required
+        label="Active"
+        name="isActive"
       >
-        <UTextarea
-          v-model="state.description"
-          :rows="6"
-          placeholder="Project description"
-          autoresize
-          :maxrows="10"
-        />
+        <USwitch v-model="state.isActive" />
       </UFormField>
 
-      <UFormField
-        label="Responsibilities"
-        name="responsibility"
-      >
-        <UInputTags
-          v-model="state.responsibility"
-          placeholder="Add your responsibility..."
-        />
-      </UFormField>
-
-      <ProjectImageManager
+      <AdminHeroFormHeroImageManager
         ref="imageManager"
-        :project-id="project.id"
-        :images="project.images"
+        :homepage-id="homepage.id"
+        :hero-image="homepage.heroImage"
+        :hero-image-mobile="homepage.heroImageMobile"
       />
 
       <UButton
@@ -149,8 +123,8 @@ async function onDelete() {
       </UButton>
     </UForm>
 
-    <!-- Danger Zone (absorbed from ProjectDeleteZone) -->
-    <UDivider />
+    <!-- Danger Zone -->
+    <USeparator />
 
     <div class="space-y-3">
       <p class="text-error text-sm font-medium">Danger Zone</p>
@@ -162,12 +136,12 @@ async function onDelete() {
           block
           @click="showDeleteConfirm = true"
         >
-          Delete Project
+          Delete Homepage Record
         </UButton>
       </template>
       <template v-else>
         <p class="text-dimmed text-sm">
-          This will permanently delete <strong>{{ project.title }}</strong
+          This will permanently delete <strong>{{ homepage.heroTitle }}</strong
           >.
         </p>
         <div class="flex gap-2">

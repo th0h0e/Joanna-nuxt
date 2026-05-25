@@ -163,7 +163,7 @@ const onDeleteSuccess = async () => {
           :alt="row.original.title"
           loading="lazy"
           class="h-32 w-auto shrink-0 rounded object-cover"
-        />
+        >
       </div>
       <div
         v-else
@@ -174,7 +174,7 @@ const onDeleteSuccess = async () => {
     </template>
   </UTable>
 
-  <ConfigDrawer
+  <AdminProjectsConfigDrawer
     v-model:open="drawerOpen"
     :project="selectedProject"
     @success="onFormSuccess"

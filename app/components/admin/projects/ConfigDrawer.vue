@@ -19,7 +19,7 @@ const drawerOpen = defineModel<boolean>('open', { default: false })
     :title="project?.title ?? 'Project Settings'"
   >
     <template #body>
-      <ProjectForm
+      <AdminProjectsFormProjectForm
         v-if="project"
         :project="project"
         @success="emit('success')"
