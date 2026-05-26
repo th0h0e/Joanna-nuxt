@@ -136,7 +136,7 @@ const onDeleteSuccess = async () => {
             alt="Hero Image"
             loading="lazy"
             class="h-32 w-auto rounded object-cover"
-          />
+          >
         </div>
         <div
           v-if="row.original.heroImageMobile"
@@ -148,7 +148,7 @@ const onDeleteSuccess = async () => {
             alt="Mobile Hero Image"
             loading="lazy"
             class="h-32 w-auto rounded object-cover"
-          />
+          >
         </div>
         <div
           v-if="!row.original.heroImage && !row.original.heroImageMobile"

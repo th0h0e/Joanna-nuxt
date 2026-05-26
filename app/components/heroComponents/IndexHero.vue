@@ -35,7 +35,7 @@ const imageUrl = computed(() => {
           :src="imageUrl"
           alt="Hero background"
           class="h-full w-full object-cover"
-        />
+        >
       </div>
     </template>
   </UPageHero>

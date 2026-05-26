@@ -181,7 +181,7 @@ async function onDelete() {
               :src="getFaviconUrl()!"
               alt="Favicon"
               class="h-8 w-8 rounded object-contain"
-            />
+            >
             <UButton
               size="xs"
               color="error"

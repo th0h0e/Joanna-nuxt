@@ -49,26 +49,14 @@ const isPopupOpen = ref(false)
       </div>
     </div>
 
-    <UCarousel
-      v-if="images.length > 0"
-      v-slot="{ item }"
-      loop
-      orientation="horizontal"
-      wheel-gestures
-      align="center"
-      :items="images"
-      :ui="{
-        root: 'w-screen h-[100dvh]',
-        viewport: 'w-screen h-[100dvh]',
-        container: 'h-[100dvh]',
-        item: 'basis-full min-w-0 shrink-0 w-screen h-[100dvh]'
-      }"
-    >
-      <img
-        :src="item"
-        :alt="alt"
-        class="h-full w-full object-cover"
-      >
-    </UCarousel>
+    <CarouselEmblaRoot v-if="images.length > 0" :options="{ loop: true, align: 'center', wheelGestures: true }">
+      <CarouselEmblaSlide v-for="(image, index) in images" :key="index">
+        <img
+          :src="image"
+          :alt="`${alt} ${index + 1}`"
+          class="h-dvh w-screen object-cover"
+        >
+      </CarouselEmblaSlide>
+    </CarouselEmblaRoot>
   </div>
 </template>

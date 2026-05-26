@@ -66,7 +66,7 @@ defineExpose({ getFormDataEntries })
             :src="getHeroImageUrl(heroImage)"
             alt="Hero Image"
             class="h-20 w-28 rounded border object-cover"
-          />
+          >
           <UButton
             size="xs"
             color="error"
@@ -105,7 +105,7 @@ defineExpose({ getFormDataEntries })
             :src="getHeroImageUrl(heroImageMobile)"
             alt="Mobile Hero Image"
             class="h-20 w-28 rounded border object-cover"
-          />
+          >
           <UButton
             size="xs"
             color="error"

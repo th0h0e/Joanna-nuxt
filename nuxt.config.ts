@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/hints',
     '@nuxt/image',
     '@nuxt/scripts',
-    '@compodium/nuxt'
+    '@compodium/nuxt',
+    '@vueuse/nuxt'
   ],
 
   components: [

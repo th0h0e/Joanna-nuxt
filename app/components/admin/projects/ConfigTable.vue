@@ -163,7 +163,7 @@ const onDeleteSuccess = async () => {
           :alt="row.original.title"
           loading="lazy"
           class="h-32 w-auto shrink-0 rounded object-cover"
-        />
+        >
       </div>
       <div
         v-else

@@ -25,6 +25,7 @@
     "nuxt": "^4.3.0",
     "pocketbase": "^0.26.8",
     "tailwindcss": "^4.3.0",
+    "wheel-gestures": "^2.2.48",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "@nuxt/eslint": "^1.15.2",
     "@nuxt/eslint-config": "^1.15.2",
     "@types/sortablejs": "^1.15.9",
+    "@vueuse/nuxt": "^14.3.0",
     "eslint": "^10.4.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
