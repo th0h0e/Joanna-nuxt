@@ -1,21 +1,25 @@
 <script setup lang="ts">
-interface HomepageData {
-  id: string
-  title: string
-  image: string
-  imageUrl: string
-}
+import type { Homepage } from '#shared/types/pocketbase-types'
 
-const { data: homepageData } = await useFetch<HomepageData>('/api/hero', {
-  key: 'homepage-hero'
+const { pocketbaseUrl } = useRuntimeConfig().public
+
+const { data: homepageRecords } = await useFetch<Homepage[]>('/api/homepage', {
+  key: 'homepage-hero',
+  transform: data => data ?? []
 })
 
-const imageUrl = computed(() => homepageData.value?.imageUrl || null)
+// Use the first (active) homepage record
+const homepage = computed(() => homepageRecords.value?.[0] ?? null)
+
+const imageUrl = computed(() => {
+  if (!homepage.value?.heroImage) return null
+  return `${pocketbaseUrl}/api/files/Homepage/${homepage.value.id}/${homepage.value.heroImage}`
+})
 </script>
 
 <template>
   <UPageHero
-    :title="homepageData?.title || 'Joanna VDW'"
+    :title="homepage?.heroTitle || 'Joanna VDW'"
     :ui="{
       root: 'h-[100dvh] flex items-center justify-center',
       container: 'py-0 max-w-none',

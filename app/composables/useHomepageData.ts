@@ -2,24 +2,17 @@ import type { Homepage } from '#shared/types/pocketbase-types'
 
 export function useHomepageData() {
   const { pocketbaseUrl } = useRuntimeConfig().public
-  const toast = useToast()
 
-  const { data, status, refresh } = useLazyFetch<Homepage[]>('/api/homepage', {
-    key: 'homepage-admin',
+  const base = useCmsData<Homepage>({
+    endpoint: '/api/homepage',
+    fetchKey: 'homepage-admin',
+    collectionKey: 'homepage',
     transform: data => {
       // Handle both single-record and array responses
       if (Array.isArray(data)) return data
       if (data && typeof data === 'object' && 'id' in data) return [data as unknown as Homepage]
       return []
-    },
-    server: false
-  })
-
-  const { data: savedOrder } = useLazyFetch<string[]>('/api/tableOrder', {
-    key: 'table-order-homepage',
-    query: { key: 'homepage' },
-    default: () => [],
-    server: false
+    }
   })
 
   // ── Image URL helpers ────────────────────────────────────────────────────
@@ -36,29 +29,10 @@ export function useHomepageData() {
     return `${pocketbaseUrl}/api/files/Homepage/${homepage.id}/${image}`
   }
 
-  // ── Persist drag-and-drop order ──────────────────────────────────────────
-  async function persistOrder(orderedIds: string[]) {
-    try {
-      await $fetch('/api/tableOrder', {
-        method: 'POST',
-        body: { key: 'homepage', orderedIds }
-      })
-      toast.add({ title: 'Order saved', color: 'success' })
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Unknown error'
-      toast.add({ title: 'Failed to save order', description: message, color: 'error' })
-      refresh()
-    }
-  }
-
   return {
-    data,
-    status,
-    refresh,
-    savedOrder,
+    ...base,
     getThumbnail,
     getImageUrl,
-    getFullImageUrl,
-    persistOrder
+    getFullImageUrl
   }
 }
