@@ -19,7 +19,7 @@ const drawerOpen = defineModel<boolean>('open', { default: false })
     title="Site Settings"
   >
     <template #body>
-      <AdminSettingsForm
+      <LazyAdminSettingsForm
         v-if="setting"
         :setting="setting"
         @success="emit('success')"

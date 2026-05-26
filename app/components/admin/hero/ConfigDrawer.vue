@@ -19,7 +19,7 @@ const drawerOpen = defineModel<boolean>('open', { default: false })
     :title="homepage?.heroTitle ?? 'Homepage Settings'"
   >
     <template #body>
-      <AdminHeroFormHomepageForm
+      <LazyAdminHeroFormHomepageForm
         v-if="homepage"
         :homepage="homepage"
         @success="emit('success')"

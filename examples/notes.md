@@ -15,7 +15,18 @@ before we do so I want you to familiarize yourself with
 Taks:
 
 - Try reusing code (composables & utilities)
-- Understanding why there are server [id] routes and get / fetch routes nested
 - Add Tab or sidebar to the admin page for collections (maybe)
 - change delay to 400 ms
 -
+
+
+
+
+Maybe:
+
+for H3 error in the terminal:
+
+routeRules: {
+  '/api/**': { cors: true },
+  '/_nuxt/': { redirect: '/' }  // redirect bare path to home
+}

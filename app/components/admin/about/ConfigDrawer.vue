@@ -19,7 +19,7 @@ const drawerOpen = defineModel<boolean>('open', { default: false })
     :title="about?.portfolioTitle ?? 'About Settings'"
   >
     <template #body>
-      <AdminAboutForm
+      <LazyAdminAboutForm
         v-if="about"
         :about="about"
         @success="emit('success')"

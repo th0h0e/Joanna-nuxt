@@ -59,13 +59,15 @@ const getProjectImages = (project: PortfolioProject) => {
       class="snap-point"
     >
       <a :id="`project-${project.title.replace(/\s+/g, '-').toLowerCase()}`" />
-      <CarouselDesktop
-        :images="getProjectImages(project)"
-        :project-title="project.title"
-        :project-description="project.description"
-        :project-responsibility="project.responsibility"
-        :alt="project.title"
-      />
+      <ClientOnly>
+        <CarouselDesktop
+          :images="getProjectImages(project)"
+          :project-title="project.title"
+          :project-description="project.description"
+          :project-responsibility="project.responsibility"
+          :alt="project.title"
+        />
+      </ClientOnly>
     </div>
 
     <div class="snap-point">
