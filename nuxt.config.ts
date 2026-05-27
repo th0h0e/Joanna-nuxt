@@ -23,6 +23,8 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  extends: ['github:th0h0e/carousel'],
+
   colorMode: {
     preference: 'dark',
     fallback: 'dark'
