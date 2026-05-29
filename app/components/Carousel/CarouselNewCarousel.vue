@@ -49,13 +49,19 @@ const isPopupOpen = ref(false)
       </div>
     </div>
 
-    <CarouselEmblaRoot v-if="images.length > 0" :options="{ loop: true, align: 'center', wheelGestures: true }">
-      <CarouselEmblaSlide v-for="(image, index) in images" :key="index">
+    <CarouselEmblaRoot
+      v-if="images.length > 0"
+      :options="{ loop: false, align: 'center', wheelGestures: true }"
+    >
+      <CarouselEmblaSlide
+        v-for="(image, index) in images"
+        :key="index"
+      >
         <img
           :src="image"
           :alt="`${alt} ${index + 1}`"
           class="h-dvh w-screen object-cover"
-        >
+        />
       </CarouselEmblaSlide>
     </CarouselEmblaRoot>
   </div>

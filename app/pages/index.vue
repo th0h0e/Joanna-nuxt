@@ -60,7 +60,7 @@ const getProjectImages = (project: PortfolioProject) => {
     >
       <a :id="`project-${project.title.replace(/\s+/g, '-').toLowerCase()}`" />
       <ClientOnly>
-        <CarouselDesktop
+        <CarouselNewCarousel
           :images="getProjectImages(project)"
           :project-title="project.title"
           :project-description="project.description"

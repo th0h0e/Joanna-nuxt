@@ -34,7 +34,7 @@ export function useHomepageData() {
 
   // ── Image URL helpers ────────────────────────────────────────────────────
 
-  /** Small thumbnail of the hero image (120×80). */
+  /** Small thumbnail of the hero image on admin table (120×80). */
   const getThumbnail = (homepage: Homepage) => {
     if (!homepage.heroImage) return null
     return `${pocketbaseUrl}/api/files/Homepage/${homepage.id}/${homepage.heroImage}?thumb=120x80`

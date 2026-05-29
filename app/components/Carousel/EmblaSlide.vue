@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject } from 'vue'
-import type { useCarousel } from '~/composables/useCarousel'
 
+// useCarousel is auto-imported from the remote layer
 type CarouselApi = ReturnType<typeof useCarousel>
 
 const carousel = inject<CarouselApi>('carousel')
