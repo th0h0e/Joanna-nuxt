@@ -61,7 +61,7 @@ const isPopupOpen = ref(false)
           :src="image"
           :alt="`${alt} ${index + 1}`"
           class="h-dvh w-screen object-cover"
-        />
+        >
       </CarouselEmblaSlide>
     </CarouselEmblaRoot>
   </div>

@@ -13,6 +13,19 @@ Taks:
 - change delay to 400 ms
 - Create a clean interface for the api responses within the components.
 - If neccesary create a layer for the server that parses the data first so that it can be called in a clean interface on within the component
+- 
+- add transform to the fetch calls within the component to make the datas structure more readable. 
+- Docs: 
+- 
+- Minimize payload size (https://nuxt.com/docs/4.x/getting-started/data-fetching#minimize-payload-size)
+- If you need more control or map over several objects, you can use the transform function to alter the result of the query.
+- const { data: mountains } = await useFetch('/api/mountains', {
+  transform: (mountains) => {
+    return mountains.map(mountain => ({ title: mountain.title, description: mountain.description }))
+  },
+})
+-Both pick and transform don't prevent the unwanted data from being fetched initially. But they will prevent unwanted data from being added to the payload transferred from server to client.
+
 
 Maybe:
 
