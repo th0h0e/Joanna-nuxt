@@ -1,3 +1,5 @@
+import { portfolioProjectUpdateSchema } from '~~/server/schemas/pocketbase'
+
 export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
@@ -46,12 +48,12 @@ export default defineEventHandler(async event => {
       }
     }
   } else {
-    const body = await readBody(event)
+    const body = await readValidatedBody(event, portfolioProjectUpdateSchema.parse)
 
     if (body.title !== undefined) formData.append('Title', body.title)
     if (body.description !== undefined) formData.append('Description', body.description)
     if (body.responsibility !== undefined)
-      formData.append('Responsibility_json', body.responsibility)
+      formData.append('Responsibility_json', JSON.stringify(body.responsibility))
   }
 
   const response = await fetch(

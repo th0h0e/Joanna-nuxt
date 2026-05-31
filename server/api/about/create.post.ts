@@ -1,3 +1,5 @@
+import { aboutSchema } from '~~/server/schemas/pocketbase'
+
 export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const contentType = getRequestHeader(event, 'content-type') || ''
@@ -42,7 +44,7 @@ export default defineEventHandler(async event => {
     } else {
       // Convert JSON body to FormData for PocketBase
       // Always using FormData since About may have file fields in the future
-      const body = await readBody(event)
+      const body = await readValidatedBody(event, aboutSchema.parse)
 
       if (body.aboutDescription !== undefined)
         formData.append('About_Description', body.aboutDescription)
@@ -51,7 +53,7 @@ export default defineEventHandler(async event => {
           'Client_List_Json',
           typeof body.clientListJson === 'object'
             ? JSON.stringify(body.clientListJson)
-            : body.clientListJson
+            : String(body.clientListJson)
         )
       if (body.contactEmail !== undefined) formData.append('Contact_Email', body.contactEmail)
       if (body.contactMessage !== undefined) formData.append('Contact_Message', body.contactMessage)

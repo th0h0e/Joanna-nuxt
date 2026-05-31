@@ -1,3 +1,5 @@
+import { homepageSchema } from '~~/server/schemas/pocketbase'
+
 export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const contentType = getRequestHeader(event, 'content-type') || ''
@@ -30,7 +32,7 @@ export default defineEventHandler(async event => {
         }
       }
     } else {
-      const body = await readBody(event)
+      const body = await readValidatedBody(event, homepageSchema.parse)
 
       if (body.heroTitle !== undefined) formData.append('Hero_Title', body.heroTitle)
       if (body.isActive !== undefined) formData.append('Is_Active', String(body.isActive))

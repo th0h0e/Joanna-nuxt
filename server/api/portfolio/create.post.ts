@@ -1,3 +1,5 @@
+import { portfolioProjectSchema } from '~~/server/schemas/pocketbase'
+
 export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
 
@@ -49,7 +51,7 @@ export default defineEventHandler(async event => {
   }
 
   // Handle JSON body
-  const body = await readBody(event)
+  const body = await readValidatedBody(event, portfolioProjectSchema.parse)
 
   const pbData: Record<string, unknown> = {}
   if (body.title !== undefined) pbData.Title = body.title

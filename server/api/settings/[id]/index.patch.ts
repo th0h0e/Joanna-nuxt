@@ -1,3 +1,5 @@
+import { settingsUpdateSchema } from '~~/server/schemas/pocketbase'
+
 export default defineEventHandler(async event => {
   const { pocketbaseUrl } = useRuntimeConfig(event)
   const id = getRouterParam(event, 'id')
@@ -43,7 +45,7 @@ export default defineEventHandler(async event => {
         }
       }
     } else {
-      const body = await readBody(event)
+      const body = await readValidatedBody(event, settingsUpdateSchema.parse)
 
       if (body.desktopFontSize !== undefined)
         formData.append('Desktop_Font_Size', String(body.desktopFontSize))
