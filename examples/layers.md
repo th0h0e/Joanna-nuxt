@@ -1,18 +1,15 @@
 Starting prompt:
 
-I would like you to help me with a functionality of nuxt. It lets one create applications that serve as micro services that don't have to be part of your main directory. The architecture I am talking about is called layers. Each layer works as an independent nuxt application. 
-I would like you to help me understand this concept a bit better by going over the docs with me. 
+I would like you to help me with a functionality of nuxt. It lets one create applications that serve as micro services that don't have to be part of your main directory. The architecture I am talking about is called layers. Each layer works as an independent nuxt application.
+I would like you to help me understand this concept a bit better by going over the docs with me.
 
-
-I would like to create a layer using the extend set up they discribe. 
-Idealy I would like to publish this external layer to a seperate github repo and consume it from another nuxt application. 
+I would like to create a layer using the extend set up they discribe.
+Idealy I would like to publish this external layer to a seperate github repo and consume it from another nuxt application.
 Please help me out with telling me the step by step process of setting up a very basic directory that i can then later use as a layer consumed by my main application via github
-
 
 Here are the docs:
 
 Layers Docs:
-
 
 https://nuxt.com/docs/4.x/directory-structure/layers
 
@@ -107,16 +104,11 @@ To control the order, prefix directories with numbers: `1.base/`, `2.features/`,
 
 <read-more to="/docs/4.x/getting-started/layers#layer-priority">
 
-
-
 </read-more>
 
 <video-accordion title="Watch a video from Learn Vue about Nuxt Layers" video-id="lnFCM7c9f7I">
 
-
-
 </video-accordion>
-
 
 https://nuxt.com/docs/4.x/getting-started/layers#layer-priority
 
@@ -164,8 +156,8 @@ export default defineNuxtConfig({
     // Extend from an installed npm package
     '@my-themes/awesome',
     // Extend from a git repository
-    'github:my-themes/awesome#v1',
-  ],
+    'github:my-themes/awesome#v1'
+  ]
 })
 ```
 
@@ -175,8 +167,8 @@ You can also pass an authentication token if you are extending from a private Gi
 export default defineNuxtConfig({
   extends: [
     // per layer configuration
-    ['github:my-themes/private-awesome', { auth: process.env.GITHUB_TOKEN }],
-  ],
+    ['github:my-themes/private-awesome', { auth: process.env.GITHUB_TOKEN }]
+  ]
 })
 ```
 
@@ -197,11 +189,11 @@ export default defineNuxtConfig({
       'github:my-themes/awesome',
       {
         meta: {
-          name: 'my-awesome-theme',
-        },
-      },
-    ],
-  ],
+          name: 'my-awesome-theme'
+        }
+      }
+    ]
+  ]
 })
 ```
 
@@ -269,8 +261,8 @@ export default defineNuxtConfig({
   extends: [
     '../base', // Local layer outside project
     '@my-themes/awesome', // NPM package
-    'github:my-themes/awesome#v1', // Remote repository
-  ],
+    'github:my-themes/awesome#v1' // Remote repository
+  ]
 })
 ```
 
@@ -296,13 +288,9 @@ Read more about layers in the **Layer Author Guide**.
 
 <video-accordion title="Watch a video from Learn Vue about Nuxt Layers" video-id="lnFCM7c9f7I">
 
-
-
 </video-accordion>
 
 <video-accordion title="Watch a video from Alexander Lichter about Nuxt Layers" video-id="fr5yo3aVkfA">
-
-
 
 </video-accordion>
 
@@ -316,7 +304,6 @@ A lightweight Nuxt theme to build a Markdown driven website. Powered by Nuxt Con
 </card>
 </card-group>
 
-
 https://nuxt.com/docs/4.x/guide/going-further/layers
 
 # Authoring Nuxt Layers
@@ -326,8 +313,6 @@ https://nuxt.com/docs/4.x/guide/going-further/layers
 Nuxt layers are a powerful feature that you can use to share and reuse partial Nuxt applications within a monorepo, or from a git repository or npm package. The layers structure is almost identical to a standard Nuxt application, which makes them easy to author and maintain.
 
 <read-more to="/docs/4.x/getting-started/layers">
-
-
 
 </read-more>
 
@@ -339,15 +324,15 @@ export default defineNuxtConfig({})
 
 Additionally, certain other files in the layer directory will be auto-scanned and used by Nuxt for the project extending this layer.
 
-- [`app/components/*`](/docs/4.x/directory-structure/app/components)   - Extend the default components
-- [`app/composables/*`](/docs/4.x/directory-structure/app/composables)  - Extend the default composables
-- [`app/layouts/*`](/docs/4.x/directory-structure/app/layouts)  - Extend the default layouts
-- [`app/middleware/*`](/docs/4.x/directory-structure/app/middleware)  - Extend the default middleware
-- [`app/pages/*`](/docs/4.x/directory-structure/app/pages)        - Extend the default pages
-- [`app/plugins/*`](/docs/4.x/directory-structure/app/plugins)        - Extend the default plugins
-- [`app/utils/*`](/docs/4.x/directory-structure/app/utils)   - Extend the default utils
-- [`app/app.config.ts`](/docs/4.x/directory-structure/app/app-config)  - Extend the default app config
-- [`server/*`](/docs/4.x/directory-structure/server)       - Extend the default server endpoints & middleware
+- [`app/components/*`](/docs/4.x/directory-structure/app/components) - Extend the default components
+- [`app/composables/*`](/docs/4.x/directory-structure/app/composables) - Extend the default composables
+- [`app/layouts/*`](/docs/4.x/directory-structure/app/layouts) - Extend the default layouts
+- [`app/middleware/*`](/docs/4.x/directory-structure/app/middleware) - Extend the default middleware
+- [`app/pages/*`](/docs/4.x/directory-structure/app/pages) - Extend the default pages
+- [`app/plugins/*`](/docs/4.x/directory-structure/app/plugins) - Extend the default plugins
+- [`app/utils/*`](/docs/4.x/directory-structure/app/utils) - Extend the default utils
+- [`app/app.config.ts`](/docs/4.x/directory-structure/app/app-config) - Extend the default app config
+- [`server/*`](/docs/4.x/directory-structure/server) - Extend the default server endpoints & middleware
 - [`nuxt.config.ts`](/docs/4.x/directory-structure/nuxt-config)- Extend the default nuxt config
 
 ## Basic Example
@@ -356,9 +341,7 @@ Additionally, certain other files in the layer directory will be auto-scanned an
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-  extends: [
-    './base',
-  ],
+  extends: ['./base']
 })
 ```
 
@@ -374,11 +357,9 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'Extending Configs is Fun!',
-      meta: [
-        { name: 'description', content: 'I am using the extends feature in Nuxt!' },
-      ],
-    },
-  },
+      meta: [{ name: 'description', content: 'I am using the extends feature in Nuxt!' }]
+    }
+  }
 })
 ```
 
@@ -421,8 +402,8 @@ export default defineNuxtConfig({
     // NPM package
     '@my-themes/awesome',
     // Remote repository
-    'github:my-themes/awesome#v1',
-  ],
+    'github:my-themes/awesome#v1'
+  ]
 })
 ```
 
@@ -468,8 +449,8 @@ export default defineNuxtConfig({
     // GitLab Remote Source example
     'gitlab:username/repoName',
     // Bitbucket Remote Source example
-    'bitbucket:username/repoName',
-  ],
+    'bitbucket:username/repoName'
+  ]
 })
 ```
 
@@ -497,9 +478,7 @@ When using git remote sources, if a layer has npm dependencies and you wish to i
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-  extends: [
-    ['github:username/repoName', { install: true }],
-  ],
+  extends: [['github:username/repoName', { install: true }]]
 })
 ```
 
@@ -517,8 +496,8 @@ export default defineNuxtConfig({
     // Node Module with scope
     '@scope/moduleName',
     // or just the module name
-    'moduleName',
-  ],
+    'moduleName'
+  ]
 })
 ```
 
@@ -562,8 +541,8 @@ If you want to create named layer aliases for other layers, you can specify a na
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
   $meta: {
-    name: 'example',
-  },
+    name: 'example'
+  }
 })
 ```
 
@@ -582,9 +561,7 @@ import { dirname, join } from 'node:path'
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineNuxtConfig({
-  css: [
-    join(currentDir, './app/assets/main.css'),
-  ],
+  css: [join(currentDir, './app/assets/main.css')]
 })
 ```
 
@@ -597,7 +574,7 @@ export default defineNuxtConfig({
   extends: ['./base-layer'],
   // Disable modules from the layer by setting their config key to false
   image: false, // Disables @nuxt/image
-  pinia: false, // Disables @pinia/nuxt
+  pinia: false // Disables @pinia/nuxt
 })
 ```
 
@@ -627,7 +604,7 @@ You can use the [`getLayerDirectories`](/docs/4.x/api/kit/layers#getlayerdirecto
 import { defineNuxtModule, getLayerDirectories } from 'nuxt/kit'
 
 export default defineNuxtModule({
-  setup (_options, nuxt) {
+  setup(_options, nuxt) {
     const layerDirs = getLayerDirectories()
 
     for (const [index, layer] of layerDirs.entries()) {
@@ -638,7 +615,7 @@ export default defineNuxtModule({
       console.log(`  Pages: ${layer.appPages}`)
       // ... other directories
     }
-  },
+  }
 })
 ```
 

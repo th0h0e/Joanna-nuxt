@@ -9,10 +9,10 @@ before we do so I want you to familiarize yourself with
 
 Taks:
 
-- Try reusing code (composables & utilities)
 - Add Tab or sidebar to the admin page for collections (maybe)
 - change delay to 400 ms
--
+- Create a clean interface for the api responses within the components.
+- If neccesary create a layer for the server that parses the data first so that it can be called in a clean interface on within the component
 
 Maybe:
 
@@ -22,8 +22,6 @@ routeRules: {
 '/api/\*\*': { cors: true },
 '/\_nuxt/': { redirect: '/' } // redirect bare path to home
 }
-
-
 
 Copy the pure math/utilities as-is (~15 files, ~500 lines total)
 Write a Vue composable (useCarousel.ts) that:
@@ -35,69 +33,3 @@ Write a simplified wheel gesture handler — you can skip the full wheel-gesture
 Accumulate wheel.deltaX on each event
 Debounce the end with a simple timeout
 Snap to next/prev slide based on accumulated delta direction
-
-
-
-For the Nuxt Carousel Layer
-
-
-Embla Core (copied from open source)
-app/composables/carousel/
-
-Alignment.ts
-Animations.ts
-Axis.ts
-Counter.ts
-DragHandler.ts
-DragTracker.ts
-EmblaCarousel.ts
-Engine.ts
-EventHandler.ts
-EventStore.ts
-Limit.ts
-NodeRects.ts
-Options.ts
-OptionsHandler.ts
-PercentOfView.ts
-Plugins.ts
-PluginsHandler.ts
-ResizeHandler.ts
-ScrollBody.ts
-ScrollBounds.ts
-ScrollContain.ts
-ScrollLimit.ts
-ScrollLooper.ts
-ScrollProgress.ts
-ScrollSnaps.ts
-ScrollTarget.ts
-ScrollTo.ts
-SlideFocus.ts
-SlideLooper.ts
-SlideRegistry.ts
-SlideSizes.ts
-SlidesHandler.ts
-SlidesInView.ts
-SlidesToScroll.ts
-Translate.ts
-Vector1d.ts
-utils.ts
-
-
-Vue Composables
-
-app/composables/useCarousel.ts          — Vue wrapper (lifecycle, reactive state, actions)
-app/composables/useWheelGestures.ts     — Trackpad swipe adapter (wheel-gestures → synthetic mouse events)
-
-Vue Components
-
-app/components/Carousel/EmblaRoot.vue              — Carousel wrapper (ref, provide)
-app/components/Carousel/EmblaSlide.vue             — Individual slide
-app/components/Carousel/CarouselNewCarousel.vue    — Full carousel with title overlay + modal (like CarouselDesktop)
-
-Page
-
-app/pages/custom-carousel.vue         — Test page (same data/layout as index.vue)
-
-npm Dependency
-
-wheel-gestures                         — Trackpad wheel event normalization + momentum detection
